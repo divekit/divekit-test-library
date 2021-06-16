@@ -13,6 +13,10 @@ public class Attribute {
 
     public Attribute() {}
 
+    public Attribute(String name) {
+        this.name = name;
+    }
+
     public Attribute(String name, String type, String serializedValue) {
         this.name = name;
         this.type = type;
