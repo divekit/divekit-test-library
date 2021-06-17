@@ -146,7 +146,7 @@ public class ObjectValidator {
         if (doesAttributeExist(hiddenAttributes, field.getName())) {
             assertFalse(doesFieldContainAnnotationName(field, "JsonIgnore"));
             resultActions.andExpect(jsonPath(fieldPath).doesNotExist());
-        } else if (doesAttributeExist(attributes, field.getName())) {
+        } else if (doesAttributeExist(attributes, field.getName()) && field.get(object) != null) {
             resultActions.andExpect(jsonPath(fieldPath).value(field.get(object)));
         }
     }
