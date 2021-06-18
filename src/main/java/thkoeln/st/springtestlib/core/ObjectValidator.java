@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -148,7 +147,7 @@ public class ObjectValidator {
             assertFalse(doesFieldContainAnnotationName(field, "JsonIgnore"));
             resultActions.andExpect(jsonPath(fieldPath).doesNotExist());
         } else if (doesAttributeExist(attributes, field.getName()) && field.get(object) != null) {
-            resultActions.andExpect(jsonPath(fieldPath).value(equalTo(field.get(object))));
+            resultActions.andExpect(jsonPath(fieldPath).value(field.get(object).toString()));
         }
     }
 
