@@ -7,7 +7,7 @@ import java.util.List;
 
 public class RelationElement extends LineElement {
 
-    private static final float CONNECTION_ACCURACY = 5;
+    private static final float CONNECTION_ACCURACY = 10; // TODO prozentual? was ist mit eclipse formen?
 
     private RelationPointer relationPointer1 = new RelationPointer();
     private RelationPointer relationPointer2 = new RelationPointer();

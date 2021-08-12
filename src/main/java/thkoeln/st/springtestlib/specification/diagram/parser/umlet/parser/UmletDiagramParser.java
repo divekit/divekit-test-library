@@ -51,7 +51,7 @@ public class UmletDiagramParser extends DiagramParser {
 
     private String loadDiagramString(String path) throws IOException {
         try {
-            return Files.readString(Paths.get(getClass().getClassLoader().getResource(path).toURI()));
+            return Files.readString(Paths.get(getClass().getClassLoader().getResource(path).toURI())); // TODO not found werfen, leider wird nur nullpointer geschmissen
         } catch (URISyntaxException e) {
             throw new IOException(e.getMessage());
         }

@@ -3,7 +3,8 @@ package thkoeln.st.springtestlib.specification.diagram.implementations;
 
 public enum DiagramType {
 
-    CLASS_DIAGRAM(ClassDiagram.class);
+    CLASS_DIAGRAM(ClassDiagram.class),
+    USE_CASE_DIAGRAM(UseCaseDiagram.class);
 
     private Class<?> diagramClass;
 
