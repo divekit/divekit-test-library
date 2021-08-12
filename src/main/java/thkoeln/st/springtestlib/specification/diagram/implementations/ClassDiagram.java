@@ -14,29 +14,29 @@ public class ClassDiagram extends Diagram {
 
     @Override
     public void compareToActualDiagram(Diagram actualDiagram, DiagramConfig diagramConfig) {
-        DiagramExceptionHelper diagramExceptionHelper = new DiagramExceptionHelper(diagramConfig.isSummarizeExceptions());
+        initializeDiagramExceptionHelper(diagramConfig);
 
-        assertClasses(actualDiagram, diagramExceptionHelper);
-        assertRelations(actualDiagram, diagramExceptionHelper);
+        assertClasses(actualDiagram, diagramConfig);
+        assertRelations(actualDiagram, diagramConfig);
 
         diagramExceptionHelper.throwSummarizedException();
     }
 
     // Assert Classes
-    private void assertClasses(Diagram actualDiagram, DiagramExceptionHelper diagramExceptionHelper) {
+    private void assertClasses(Diagram actualDiagram, DiagramConfig diagramConfig) {
         List<ClassElement> expectedClassElements = getElementsByType(ElementType.CLASS);
         List<ClassElement> actualClassElements = actualDiagram.getElementsByType(ElementType.CLASS);
 
         for (ClassElement expectedClassElement : expectedClassElements) {
-            compareExpectedClassWithActualClasses(expectedClassElement, actualClassElements, diagramExceptionHelper);
+            compareExpectedClassWithActualClasses(expectedClassElement, actualClassElements, diagramConfig);
         }
 
-        if (actualClassElements.size() > expectedClassElements.size()) {
+        if (!diagramConfig.isPartialTest() && actualClassElements.size() > expectedClassElements.size()) {
             diagramExceptionHelper.throwException("Too many classes");
         }
     }
 
-    private void compareExpectedClassWithActualClasses(ClassElement expectedClassElement, List<ClassElement> actualClassElements, DiagramExceptionHelper diagramExceptionHelper) {
+    private void compareExpectedClassWithActualClasses(ClassElement expectedClassElement, List<ClassElement> actualClassElements, DiagramConfig diagramConfig) {
         boolean found = false;
         for (ClassElement actualClassElement : actualClassElements) {
             if (expectedClassElement.equals(actualClassElement)) {
@@ -44,7 +44,7 @@ public class ClassDiagram extends Diagram {
                     diagramExceptionHelper.throwException("There are multiple classes with name: " + expectedClassElement.getId());
                 }
 
-                compareExpectedClassWithActualClass(expectedClassElement, actualClassElement, diagramExceptionHelper);
+                compareExpectedClassWithActualClass(expectedClassElement, actualClassElement, diagramConfig);
                 found = true;
             }
         }
@@ -54,24 +54,24 @@ public class ClassDiagram extends Diagram {
         }
     }
 
-    private void compareExpectedClassWithActualClass(ClassElement expectedClassElement, ClassElement actualClassElement, DiagramExceptionHelper diagramExceptionHelper) {
-        compareExpectedClassAttributesWithActualClassAttributes(expectedClassElement, actualClassElement, diagramExceptionHelper);
+    private void compareExpectedClassWithActualClass(ClassElement expectedClassElement, ClassElement actualClassElement, DiagramConfig diagramConfig) {
+        compareExpectedClassAttributesWithActualClassAttributes(expectedClassElement, actualClassElement, diagramConfig);
     }
 
-    private void compareExpectedClassAttributesWithActualClassAttributes(ClassElement expectedClassElement, ClassElement actualClassElement, DiagramExceptionHelper diagramExceptionHelper) {
+    private void compareExpectedClassAttributesWithActualClassAttributes(ClassElement expectedClassElement, ClassElement actualClassElement, DiagramConfig diagramConfig) {
         List<ClassAttribute> expectedAttributes = expectedClassElement.getAttributes();
         List<ClassAttribute> actualAttributes = actualClassElement.getAttributes();
 
         for (ClassAttribute expectedAttribute : expectedAttributes) {
-            compareExpectedClassAttributeWithActualClassAttributes(expectedClassElement, expectedAttribute, actualAttributes, diagramExceptionHelper);
+            compareExpectedClassAttributeWithActualClassAttributes(expectedClassElement, expectedAttribute, actualAttributes, diagramConfig);
         }
 
-        if (actualAttributes.size() > expectedAttributes.size()) {
+        if (!diagramConfig.isPartialTest() && actualAttributes.size() > expectedAttributes.size()) {
             diagramExceptionHelper.throwException("Too many attributes in class: " + expectedClassElement.getId());
         }
     }
 
-    private void compareExpectedClassAttributeWithActualClassAttributes(ClassElement expectedClassElement, ClassAttribute expectedAttribute, List<ClassAttribute> actualAttributes, DiagramExceptionHelper diagramExceptionHelper) {
+    private void compareExpectedClassAttributeWithActualClassAttributes(ClassElement expectedClassElement, ClassAttribute expectedAttribute, List<ClassAttribute> actualAttributes, DiagramConfig diagramConfig) {
         for (ClassAttribute actualAttribute : actualAttributes) {
             if (expectedAttribute.equals(actualAttribute)) {
                 return;
@@ -81,20 +81,20 @@ public class ClassDiagram extends Diagram {
     }
 
     // Assert Relations
-    private void assertRelations(Diagram actualDiagram, DiagramExceptionHelper diagramExceptionHelper) {
+    private void assertRelations(Diagram actualDiagram, DiagramConfig diagramConfig) {
         List<RelationElement> expectedRelationElements = getElementsByType(ElementType.RELATION);
         List<RelationElement> actualRelationElements = actualDiagram.getElementsByType(ElementType.RELATION);
 
         for (RelationElement expectedRelationElement : expectedRelationElements) {
-            compareExpectedRelationWithActualRelations(expectedRelationElement, actualRelationElements, diagramExceptionHelper);
+            compareExpectedRelationWithActualRelations(expectedRelationElement, actualRelationElements, diagramConfig);
         }
 
-        if (actualRelationElements.size() > expectedRelationElements.size()) {
+        if (!diagramConfig.isPartialTest() && actualRelationElements.size() > expectedRelationElements.size()) {
             diagramExceptionHelper.throwException("Too many relations");
         }
     }
 
-    private void compareExpectedRelationWithActualRelations(RelationElement expectedRelationElement, List<RelationElement> actualRelationElements, DiagramExceptionHelper diagramExceptionHelper) {
+    private void compareExpectedRelationWithActualRelations(RelationElement expectedRelationElement, List<RelationElement> actualRelationElements, DiagramConfig diagramConfig) {
         boolean found = false;
         for (RelationElement actualRelationElement : actualRelationElements) {
             if (expectedRelationElement.compareToRelationAndSwitchDirectionIfNeccessary(actualRelationElement)) {
@@ -103,7 +103,9 @@ public class ClassDiagram extends Diagram {
                         + expectedRelationElement.getReferencedElement1().getId() + ", " + expectedRelationElement.getReferencedElement2().getId());
                 }
 
-                compareExpectedRelationWithActualRelation(expectedRelationElement, actualRelationElement, diagramExceptionHelper);
+                if (!diagramConfig.isPartialTest()) {
+                    compareExpectedRelationWithActualRelation(expectedRelationElement, actualRelationElement, diagramConfig);
+                }
                 found = true;
             }
         }
@@ -113,7 +115,7 @@ public class ClassDiagram extends Diagram {
         }
     }
 
-    private void compareExpectedRelationWithActualRelation(RelationElement expectedRelationElement, RelationElement actualRelationElement, DiagramExceptionHelper diagramExceptionHelper) {
+    private void compareExpectedRelationWithActualRelation(RelationElement expectedRelationElement, RelationElement actualRelationElement, DiagramConfig diagramConfig) {
         if (expectedRelationElement.getRelationLineType() != actualRelationElement.getRelationLineType()) {
             diagramExceptionHelper.throwException("Relation line type is not valid for relation between classes: "
                 + expectedRelationElement.getReferencedElement1().getId() + ", " + expectedRelationElement.getReferencedElement2().getId());

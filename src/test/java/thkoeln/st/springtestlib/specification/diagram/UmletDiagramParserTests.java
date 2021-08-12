@@ -8,6 +8,7 @@ public class UmletDiagramParserTests {
     @Test
     public void testDiagramParsing() throws Exception {
         GenericDiagramSpecificationTests genericDiagramSpecificationTests = new GenericDiagramSpecificationTests();
-        genericDiagramSpecificationTests.testDiagram("class-diagram-solution.uxf", "class-diagram-w.uxf", DiagramType.CLASS_DIAGRAM);
+        genericDiagramSpecificationTests.testDiagram("class-diagram-part-solution.uxf", "class-diagram.uxf",
+                DiagramType.CLASS_DIAGRAM, new DiagramConfig(true, true));
     }
 }

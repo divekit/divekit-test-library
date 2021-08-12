@@ -10,6 +10,8 @@ import java.util.Map;
 
 public abstract class Diagram {
 
+    protected DiagramExceptionHelper diagramExceptionHelper;
+
     protected Map<ElementType, List<Element>> elementMap = new HashMap<>();
     protected List<Element> elements = new ArrayList<>();
 
@@ -24,6 +26,10 @@ public abstract class Diagram {
         for (Element element : elements) {
             element.init(elements);
         }
+    }
+
+    protected void initializeDiagramExceptionHelper(DiagramConfig diagramConfig) {
+        diagramExceptionHelper = new DiagramExceptionHelper(diagramConfig.isSummarizeExceptions());
     }
 
     public <T> List<T> getElementsByType(ElementType elementType) {

@@ -7,11 +7,11 @@ import java.io.IOException;
 
 public class GenericDiagramSpecificationTests {
 
-    public void testDiagram(String expectedPath, String actualPath, DiagramType diagramType) throws IOException {
+    public void testDiagram(String expectedPath, String actualPath, DiagramType diagramType, DiagramConfig diagramConfig) throws IOException {
         Diagram expectedDiagram = loadDiagram(expectedPath, diagramType);
         Diagram actualDiagram = loadDiagram(actualPath, diagramType);
 
-        expectedDiagram.compareToActualDiagram(actualDiagram, new DiagramConfig(true));
+        expectedDiagram.compareToActualDiagram(actualDiagram, diagramConfig);
     }
 
     private Diagram loadDiagram(String path, DiagramType diagramType) throws IOException {
