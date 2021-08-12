@@ -49,12 +49,12 @@
     <id>Relation</id>
     <coordinates>
       <x>570</x>
-      <y>270</y>
-      <w>260</w>
-      <h>270</h>
+      <y>260</y>
+      <w>220</w>
+      <h>280</h>
     </coordinates>
     <panel_attributes/>
-    <additional_attributes>10.0;250.0;240.0;10.0</additional_attributes>
+    <additional_attributes>10.0;260.0;200.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>

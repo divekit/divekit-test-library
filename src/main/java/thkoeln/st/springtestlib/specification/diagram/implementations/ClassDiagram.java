@@ -2,7 +2,6 @@ package thkoeln.st.springtestlib.specification.diagram.implementations;
 
 import thkoeln.st.springtestlib.specification.diagram.Diagram;
 import thkoeln.st.springtestlib.specification.diagram.DiagramConfig;
-import thkoeln.st.springtestlib.specification.diagram.DiagramExceptionHelper;
 import thkoeln.st.springtestlib.specification.diagram.elements.ElementType;
 import thkoeln.st.springtestlib.specification.diagram.elements.implementations.classelement.ClassAttribute;
 import thkoeln.st.springtestlib.specification.diagram.elements.implementations.classelement.ClassElement;
@@ -97,7 +96,7 @@ public class ClassDiagram extends Diagram {
     private void compareExpectedRelationWithActualRelations(RelationElement expectedRelationElement, List<RelationElement> actualRelationElements, DiagramConfig diagramConfig) {
         boolean found = false;
         for (RelationElement actualRelationElement : actualRelationElements) {
-            if (expectedRelationElement.compareToRelationAndSwitchDirectionIfNeccessary(actualRelationElement)) {
+            if (expectedRelationElement.compareToRelationAndSwitchDirectionIfNecessary(actualRelationElement)) {
                 if (found) {
                     diagramExceptionHelper.throwException("There are multiple relations connecting classes: "
                         + expectedRelationElement.getReferencedElement1().getId() + ", " + expectedRelationElement.getReferencedElement2().getId());

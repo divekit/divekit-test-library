@@ -2,6 +2,7 @@ package thkoeln.st.springtestlib.specification.diagram.elements.implementations.
 
 import thkoeln.st.springtestlib.specification.diagram.elements.*;
 
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -40,15 +41,21 @@ public class RelationElement extends LineElement {
     }
 
     private RectangularElement getElementAtPos(List<Element> elements, Point pos) {
+        List<RectangularElement> possibleElements = new ArrayList<>();
+
         for (Element element : elements) {
             if (element instanceof RectangularElement) {
                 RectangularElement rectangularElement = (RectangularElement)element;
-                if (checkOuterBorder(rectangularElement, pos) && !checkInnerBorder(rectangularElement, pos)) {
-                    return rectangularElement;
+                if (checkOuterBorder(rectangularElement, pos)) {
+                    possibleElements.add(rectangularElement);
                 }
             }
         }
-        return null;
+
+        possibleElements.sort((o1, o2) -> (int)((o1.getWidth() * o1.getHeight())
+                - (o2.getWidth() * o2.getHeight())));
+
+        return possibleElements.isEmpty() ? null : possibleElements.get(0);
     }
 
     private boolean checkOuterBorder(RectangularElement checkElement, Point pos) {
@@ -65,7 +72,7 @@ public class RelationElement extends LineElement {
                 && pos.getY() <= checkElement.getBottomRight().getY() - CONNECTION_ACCURACY;
     }
 
-    public boolean compareToRelationAndSwitchDirectionIfNeccessary(RelationElement relationElement) {
+    public boolean compareToRelationAndSwitchDirectionIfNecessary(RelationElement relationElement) {
         if (getReferencedElement1().equals(relationElement.getReferencedElement1())
             && getReferencedElement2().equals(relationElement.getReferencedElement2())) {
             return true;

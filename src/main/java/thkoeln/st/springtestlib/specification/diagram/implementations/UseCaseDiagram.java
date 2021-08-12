@@ -4,8 +4,6 @@ import thkoeln.st.springtestlib.specification.diagram.Diagram;
 import thkoeln.st.springtestlib.specification.diagram.DiagramConfig;
 import thkoeln.st.springtestlib.specification.diagram.elements.ElementType;
 import thkoeln.st.springtestlib.specification.diagram.elements.implementations.actorelement.ActorElement;
-import thkoeln.st.springtestlib.specification.diagram.elements.implementations.classelement.ClassAttribute;
-import thkoeln.st.springtestlib.specification.diagram.elements.implementations.classelement.ClassElement;
 import thkoeln.st.springtestlib.specification.diagram.elements.implementations.relationelement.RelationElement;
 import thkoeln.st.springtestlib.specification.diagram.elements.implementations.usecaseelement.UseCaseElement;
 
@@ -103,7 +101,7 @@ public class UseCaseDiagram extends Diagram {
     private void compareExpectedRelationWithActualRelations(RelationElement expectedRelationElement, List<RelationElement> actualRelationElements, DiagramConfig diagramConfig) {
         boolean found = false;
         for (RelationElement actualRelationElement : actualRelationElements) {
-            if (expectedRelationElement.compareToRelationAndSwitchDirectionIfNeccessary(actualRelationElement)) {
+            if (expectedRelationElement.compareToRelationAndSwitchDirectionIfNecessary(actualRelationElement)) {
                 if (found) {
                     diagramExceptionHelper.throwException("There are multiple relations connecting classes: "
                         + expectedRelationElement.getReferencedElement1().getId() + ", " + expectedRelationElement.getReferencedElement2().getId());
