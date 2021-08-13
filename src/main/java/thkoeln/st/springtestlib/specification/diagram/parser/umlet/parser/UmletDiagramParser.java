@@ -9,8 +9,10 @@ import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.Umle
 import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletElement;
 import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletElementTypes;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -50,8 +52,13 @@ public class UmletDiagramParser extends DiagramParser {
     }
 
     private String loadDiagramString(String path) throws IOException {
+        URL fileUrl = getClass().getClassLoader().getResource(path);
+        if (fileUrl == null) {
+            throw new FileNotFoundException(path);
+        }
+
         try {
-            return Files.readString(Paths.get(getClass().getClassLoader().getResource(path).toURI())); // TODO not found werfen, leider wird nur nullpointer geschmissen
+            return Files.readString(Paths.get(fileUrl.toURI()));
         } catch (URISyntaxException e) {
             throw new IOException(e.getMessage());
         }

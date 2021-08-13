@@ -20,7 +20,7 @@ public class UmlActorParser extends UmletParser {
                 sourceElement.getUmletCoordinates().getHeight());
 
         String[] properties = getSplittedProperties(sourceElement);
-        actorElement.setId(properties[0]);
+        actorElement.setId(properties[0].trim());
 
         return actorElement;
     }

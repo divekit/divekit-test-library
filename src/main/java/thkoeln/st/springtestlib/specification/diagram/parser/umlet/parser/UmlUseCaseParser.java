@@ -21,7 +21,7 @@ public class UmlUseCaseParser extends UmletParser {
                 sourceElement.getUmletCoordinates().getHeight());
 
         String[] properties = getSplittedProperties(sourceElement);
-        useCaseElement.setId(properties[0]);
+        useCaseElement.setId(properties[0].trim());
 
         return useCaseElement;
     }
