@@ -11,7 +11,7 @@ public class GenericDiagramSpecificationTests {
         Diagram expectedDiagram = loadDiagram(expectedPath, diagramType);
         Diagram actualDiagram = loadDiagram(actualPath, diagramType);
 
-        expectedDiagram.compareToActualDiagram(actualDiagram, diagramConfig);
+        expectedDiagram.assertActualDiagram(actualDiagram, diagramConfig);
     }
 
     private Diagram loadDiagram(String path, DiagramType diagramType) throws IOException {

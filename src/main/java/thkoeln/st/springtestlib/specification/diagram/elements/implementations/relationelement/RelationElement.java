@@ -8,7 +8,7 @@ import java.util.List;
 
 public class RelationElement extends LineElement {
 
-    private static final float CONNECTION_ACCURACY = 10; // TODO prozentual? was ist mit eclipse formen?
+    private static final float CONNECTION_ACCURACY = 10;
 
     private RelationPointer relationPointer1 = new RelationPointer();
     private RelationPointer relationPointer2 = new RelationPointer();
@@ -30,7 +30,7 @@ public class RelationElement extends LineElement {
         relationPointer2.setConnectedElement(getElementAtPos(elements, end));
 
         if (relationPointer1.getConnectedElement() == null || relationPointer2.getConnectedElement() == null) {
-            throw new InputMismatchException("Could not connect relationelement");
+            throw new InputMismatchException("Could not connect relation");
         }
     }
 
@@ -72,17 +72,25 @@ public class RelationElement extends LineElement {
                 && pos.getY() <= checkElement.getBottomRight().getY() - CONNECTION_ACCURACY;
     }
 
-    public boolean compareToRelationAndSwitchDirectionIfNecessary(RelationElement relationElement) {
-        if (getReferencedElement1().equals(relationElement.getReferencedElement1())
-            && getReferencedElement2().equals(relationElement.getReferencedElement2())) {
-            return true;
-        }
+    public void switchDirectionIfNecessary(RelationElement relationElement) {
         if (getReferencedElement1().equals(relationElement.getReferencedElement2())
             && getReferencedElement2().equals(relationElement.getReferencedElement1())) {
-            relationElement.switchDirection();
-            return true;
+            switchDirection();
         }
-        return false;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof RelationElement)) {
+            return false;
+        }
+
+        RelationElement that = (RelationElement) o;
+
+        return  (getReferencedElement1().equals(that.getReferencedElement1())
+                && getReferencedElement2().equals(that.getReferencedElement2()))
+                || (getReferencedElement1().equals(that.getReferencedElement2())
+                && getReferencedElement2().equals(that.getReferencedElement1()));
     }
 
     public RelationPointer getRelationPointer1() {

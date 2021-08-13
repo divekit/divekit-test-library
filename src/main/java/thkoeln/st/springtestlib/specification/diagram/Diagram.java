@@ -36,5 +36,5 @@ public abstract class Diagram {
         return (List<T>)elementMap.get(elementType);
     }
 
-    public abstract void compareToActualDiagram(Diagram actualDiagram, DiagramConfig diagramConfig);
+    public abstract void assertActualDiagram(Diagram actualDiagram, DiagramConfig diagramConfig);
 }
