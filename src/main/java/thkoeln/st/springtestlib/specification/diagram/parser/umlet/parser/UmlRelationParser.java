@@ -6,6 +6,8 @@ import thkoeln.st.springtestlib.specification.diagram.elements.implementations.r
 import thkoeln.st.springtestlib.specification.diagram.elements.implementations.relationelement.RelationLineType;
 import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletElement;
 
+import java.util.List;
+
 
 public class UmlRelationParser extends UmletParser {
 
@@ -26,14 +28,19 @@ public class UmlRelationParser extends UmletParser {
     }
 
     private void setRelationType(RelationElement relationElement, UmletElement sourceElement) {
-        String[] properties = getSplittedProperties(sourceElement);
-        setRelationLineType(relationElement, properties[0]);
+        List<String> properties = getProperties(sourceElement);
+        if (properties.isEmpty()) {
+            properties.add("");
+        }
+
+        setRelationLineType(relationElement, properties.get(0));
         setRelationArrow1(relationElement, properties);
         setRelationArrow2(relationElement, properties);
+        setRelationDescription(relationElement, properties.get(properties.size() - 1));
     }
 
     private void setRelationLineType(RelationElement relationElement, String content) {
-        if (content.contains("-")) {
+        if (content.contains("-") || content.isBlank()) {
             relationElement.setRelationLineType(RelationLineType.CONTINUOUS);
         } else {
             int numberOfDots = countOccurrences(content, ".");
@@ -45,17 +52,17 @@ public class UmlRelationParser extends UmletParser {
         }
     }
 
-    private void setRelationArrow1(RelationElement relationElement, String[] properties) {
+    private void setRelationArrow1(RelationElement relationElement, List<String> properties) {
         relationElement.getRelationPointer1().setRelationArrowType(
-            getRelationArrowType(properties[0], "<"));
+            getRelationArrowType(properties.get(0), "<"));
 
         relationElement.getRelationPointer1().setCardinality(
             getCardinality(properties, "m1"));
     }
 
-    private void setRelationArrow2(RelationElement relationElement, String[] properties) {
+    private void setRelationArrow2(RelationElement relationElement, List<String> properties) {
         relationElement.getRelationPointer2().setRelationArrowType(
-            getRelationArrowType(properties[0], ">"));
+            getRelationArrowType(properties.get(0), ">"));
 
         relationElement.getRelationPointer2().setCardinality(
             getCardinality(properties, "m2"));
@@ -80,7 +87,7 @@ public class UmlRelationParser extends UmletParser {
         }
     }
 
-    private String getCardinality(String[] properties, String cardinalityPrefix) {
+    private String getCardinality(List<String> properties, String cardinalityPrefix) {
         for (String property : properties) {
             if (property.startsWith(cardinalityPrefix)) {
                 String[] split = property.split("=");
@@ -95,13 +102,17 @@ public class UmlRelationParser extends UmletParser {
         return "";
     }
 
+    private void setRelationDescription(RelationElement relationElement, String content) {
+        relationElement.setDescription(content);
+    }
+
     private int countOccurrences(String content, String find) {
         int lastIndex = 0;
         int count = 0;
 
         while(lastIndex != -1){
 
-            lastIndex = content.indexOf(find,lastIndex);
+            lastIndex = content.indexOf(find, lastIndex);
 
             if(lastIndex != -1){
                 count ++;

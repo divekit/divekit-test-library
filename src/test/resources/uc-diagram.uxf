@@ -53,7 +53,8 @@
       <w>220</w>
       <h>280</h>
     </coordinates>
-    <panel_attributes/>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;extends&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;260.0;200.0;10.0</additional_attributes>
   </element>
   <element>

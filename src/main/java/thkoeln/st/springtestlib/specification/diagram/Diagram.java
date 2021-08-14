@@ -10,7 +10,7 @@ import java.util.Map;
 
 public abstract class Diagram {
 
-    protected DiagramExceptionHelper diagramExceptionHelper;
+    protected DiagramExceptionHelper diagramExceptionHelper = new DiagramExceptionHelper();
 
     protected Map<ElementType, List<Element>> elementMap = new HashMap<>();
     protected List<Element> elements = new ArrayList<>();
@@ -28,11 +28,7 @@ public abstract class Diagram {
         }
     }
 
-    protected void initializeDiagramExceptionHelper(DiagramConfig diagramConfig) {
-        diagramExceptionHelper = new DiagramExceptionHelper(diagramConfig.isSummarizeExceptions());
-    }
-
-    public <T> List<T> getElementsByType(ElementType elementType) {
+    public <T extends Element> List<T> getElementsByType(ElementType elementType) {
         return (List<T>)elementMap.get(elementType);
     }
 

@@ -18,14 +18,14 @@ public class UmlClassParser extends UmletParser {
                 sourceElement.getUmletCoordinates().getWidth(),
                 sourceElement.getUmletCoordinates().getHeight());
 
-        String[] properties = getSplittedProperties(sourceElement);
-        classElement.setId(properties[0].trim());
+        List<String> properties = getProperties(sourceElement);
+        classElement.setId(properties.get(0)); //TODO throw parsing exception if property size is 0
         parseAttributes(classElement, properties);
 
         return classElement;
     }
 
-    private void parseAttributes(ClassElement classElement, String[] properties) {
+    private void parseAttributes(ClassElement classElement, List<String> properties) {
         List<String> attributeBody = getAttributeBody(properties);
         for (String attributeStr : attributeBody) {
             String[] attributeParts = attributeStr.split(":");
@@ -37,7 +37,7 @@ public class UmlClassParser extends UmletParser {
         }
     }
 
-    private List<String> getAttributeBody(String[] properties) {
+    private List<String> getAttributeBody(List<String> properties) {
         List<String> attributeBody = new ArrayList<>();
         boolean isBody = false;
         for (String property : properties) {

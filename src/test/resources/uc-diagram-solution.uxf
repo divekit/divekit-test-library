@@ -5,7 +5,7 @@
     <id>UMLUseCase</id>
     <coordinates>
       <x>550</x>
-      <y>170</y>
+      <y>160</y>
       <w>120</w>
       <h>40</h>
     </coordinates>
@@ -16,7 +16,7 @@
     <id>UMLActor</id>
     <coordinates>
       <x>940</x>
-      <y>350</y>
+      <y>340</y>
       <w>60</w>
       <h>110</h>
     </coordinates>
@@ -27,7 +27,7 @@
     <id>UMLUseCase</id>
     <coordinates>
       <x>540</x>
-      <y>450</y>
+      <y>440</y>
       <w>120</w>
       <h>40</h>
     </coordinates>
@@ -38,7 +38,7 @@
     <id>Relation</id>
     <coordinates>
       <x>650</x>
-      <y>400</y>
+      <y>390</y>
       <w>310</w>
       <h>90</h>
     </coordinates>
@@ -49,18 +49,21 @@
     <id>Relation</id>
     <coordinates>
       <x>580</x>
-      <y>200</y>
-      <w>40</w>
+      <y>190</y>
+      <w>100</w>
       <h>270</h>
     </coordinates>
-    <panel_attributes/>
+    <panel_attributes>lt=.&gt;
+
+
+&lt;&lt;extends&gt;&gt;</panel_attributes>
     <additional_attributes>20.0;10.0;10.0;250.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>660</x>
-      <y>180</y>
+      <y>170</y>
       <w>300</w>
       <h>220</h>
     </coordinates>

@@ -10,10 +10,6 @@ public class DiagramExceptionHelper {
     private List<String> messages = new ArrayList<>();
 
 
-    public DiagramExceptionHelper(boolean sumExceptions) {
-        this.sumExceptions = sumExceptions;
-    }
-
     public void throwException(String message) throws InputMismatchException {
         if (sumExceptions) {
             messages.add(message);
@@ -33,5 +29,13 @@ public class DiagramExceptionHelper {
             }
             throw new InputMismatchException(errorMessage);
         }
+    }
+
+    public boolean isSumExceptions() {
+        return sumExceptions;
+    }
+
+    public void setSumExceptions(boolean sumExceptions) {
+        this.sumExceptions = sumExceptions;
     }
 }

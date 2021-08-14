@@ -15,6 +15,8 @@ public class RelationElement extends LineElement {
 
     private RelationLineType relationLineType;
 
+    private String description;
+
 
     public RelationElement() {
         super(ElementType.RELATION);
@@ -115,5 +117,13 @@ public class RelationElement extends LineElement {
 
     public void setRelationLineType(RelationLineType relationLineType) {
         this.relationLineType = relationLineType;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

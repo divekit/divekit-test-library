@@ -2,11 +2,10 @@ package thkoeln.st.springtestlib.specification.diagram;
 
 import thkoeln.st.springtestlib.specification.diagram.elements.Element;
 import thkoeln.st.springtestlib.specification.diagram.elements.ElementType;
-import thkoeln.st.springtestlib.specification.diagram.elements.implementations.classelement.ClassElement;
 
 import java.util.List;
 
-public class ElementAsserter<T extends Element> {
+public class ElementCollectionAsserter<T extends Element> {
 
     public interface SingleElementAssertable<T> {
         void assertElement(T expectedElement, T actualElement, DiagramConfig diagramConfig);
@@ -25,25 +24,29 @@ public class ElementAsserter<T extends Element> {
     private final SingleElementAssertable<T> singleElementAssertable;
     private final DuplicateElementMessageBuildable<T> duplicateElementMessageBuildable;
 
+    private final DiagramExceptionHelper diagramExceptionHelper;
 
-    public ElementAsserter(ElementType elementType,
-                           String tooManyElementsMessage,
-                           String elementMissingMessage,
-                           SingleElementAssertable<T> singleElementAssertable,
-                           DuplicateElementMessageBuildable<T> duplicateElementMessageBuildable) {
+
+    public ElementCollectionAsserter(ElementType elementType,
+                                     String tooManyElementsMessage,
+                                     String elementMissingMessage,
+                                     SingleElementAssertable<T> singleElementAssertable,
+                                     DuplicateElementMessageBuildable<T> duplicateElementMessageBuildable,
+                                     DiagramExceptionHelper diagramExceptionHelper) {
         this.elementType = elementType;
         this.tooManyElementsMessage = tooManyElementsMessage;
         this.elementMissingMessage = elementMissingMessage;
         this.singleElementAssertable = singleElementAssertable;
         this.duplicateElementMessageBuildable = duplicateElementMessageBuildable;
+        this.diagramExceptionHelper = diagramExceptionHelper;
     }
 
-    public void assertElements(Diagram expectedDiagram, Diagram actualDiagram, DiagramConfig diagramConfig, DiagramExceptionHelper diagramExceptionHelper) {
+    public void assertElements(Diagram expectedDiagram, Diagram actualDiagram, DiagramConfig diagramConfig) {
         List<T> expectedElements = expectedDiagram.getElementsByType(elementType);
         List<T> actualElements = actualDiagram.getElementsByType(elementType);
 
         for (T expectedElement : expectedElements) {
-            searchExpectedElementInActualElementsAndAssert(expectedElement, actualElements, diagramConfig, diagramExceptionHelper);
+            searchExpectedElementInActualElementsAndAssert(expectedElement, actualElements, diagramConfig);
         }
 
         if (!diagramConfig.isPartialTest() && actualElements.size() > expectedElements.size()) {
@@ -51,7 +54,7 @@ public class ElementAsserter<T extends Element> {
         }
     }
 
-    private void searchExpectedElementInActualElementsAndAssert(T expectedElement, List<T> actualElements, DiagramConfig diagramConfig, DiagramExceptionHelper diagramExceptionHelper) {
+    private void searchExpectedElementInActualElementsAndAssert(T expectedElement, List<T> actualElements, DiagramConfig diagramConfig) {
         boolean found = false;
         for (T actualElement : actualElements) {
             if (expectedElement.equals(actualElement)) {
