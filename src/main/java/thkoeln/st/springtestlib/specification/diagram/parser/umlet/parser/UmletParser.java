@@ -10,9 +10,15 @@ import java.util.stream.Collectors;
 public abstract class UmletParser implements ElementParser<UmletElement> {
 
     protected List<String> getProperties(UmletElement sourceElement) {
-        return Arrays.stream(sourceElement.getPanelAttributes().split("\n"))
+        List<String> properties = Arrays.stream(sourceElement.getPanelAttributes().split("\n"))
                 .filter((attribute) -> !attribute.isBlank())
                 .map(String::trim)
                 .collect(Collectors.toList());
+
+        if (properties.isEmpty()) {
+            properties.add("");
+        }
+
+        return properties;
     }
 }

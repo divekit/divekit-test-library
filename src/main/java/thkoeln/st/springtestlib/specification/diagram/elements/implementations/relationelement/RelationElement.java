@@ -15,7 +15,7 @@ public class RelationElement extends LineElement {
 
     private RelationLineType relationLineType;
 
-    private String description;
+    private String description = "";
 
 
     public RelationElement() {

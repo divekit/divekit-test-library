@@ -29,10 +29,6 @@ public class UmlRelationParser extends UmletParser {
 
     private void setRelationType(RelationElement relationElement, UmletElement sourceElement) {
         List<String> properties = getProperties(sourceElement);
-        if (properties.isEmpty()) {
-            properties.add("");
-        }
-
         setRelationLineType(relationElement, properties.get(0));
         setRelationArrow1(relationElement, properties);
         setRelationArrow2(relationElement, properties);
@@ -93,6 +89,7 @@ public class UmlRelationParser extends UmletParser {
                 String[] split = property.split("=");
                 if (split.length >= 2) {
                     String cardinality = split[1].trim();
+                    cardinality = cardinality.replace('m', 'n');
                     cardinality = cardinality.replace('*', 'n');
                     cardinality = cardinality.replace("0..n", "n");
                     return cardinality;
@@ -103,7 +100,11 @@ public class UmlRelationParser extends UmletParser {
     }
 
     private void setRelationDescription(RelationElement relationElement, String content) {
-        relationElement.setDescription(content);
+        if (!content.contains("lt=")
+            && !content.contains("m1=")
+            && !content.contains("m2=")) {
+            relationElement.setDescription(content);
+        }
     }
 
     private int countOccurrences(String content, String find) {

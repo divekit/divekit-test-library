@@ -19,7 +19,7 @@ public class UmlClassParser extends UmletParser {
                 sourceElement.getUmletCoordinates().getHeight());
 
         List<String> properties = getProperties(sourceElement);
-        classElement.setId(properties.get(0)); //TODO throw parsing exception if property size is 0
+        classElement.setId(properties.get(0));
         parseAttributes(classElement, properties);
 
         return classElement;
