@@ -16,7 +16,7 @@ public class ClassDiagram extends Diagram {
             "Too many classes",
             "A certain class is missing",
             (expectedElement, actualElement, diagramConfig) -> {
-                new ClassElementAsserter(diagramExceptionHelper).compareExpectedClassWithActualClass(expectedElement, actualElement, diagramConfig);
+                new ClassElementAsserter(diagramExceptionHelper).assertClassAttributes(expectedElement, actualElement, diagramConfig);
             },
             duplicateElement -> "There are multiple classes with name: " + duplicateElement.getId(),
             diagramExceptionHelper);
@@ -25,9 +25,10 @@ public class ClassDiagram extends Diagram {
             "Too many relations",
             "A certain relation is missing",
             (expectedElement, actualElement, diagramConfig) -> {
-                if (!diagramConfig.isPartialTest()) {
-                    new RelationElementAsserter(diagramExceptionHelper).compareExpectedRelationWithActualRelation(expectedElement, actualElement, diagramConfig);
-                }
+                RelationElementAsserter relationElementAsserter = new RelationElementAsserter(diagramExceptionHelper);
+                relationElementAsserter.assertRelationLine(expectedElement, actualElement, diagramConfig);
+                relationElementAsserter.assertRelationArrows(expectedElement, actualElement, diagramConfig);
+                relationElementAsserter.assertRelationCardinality(expectedElement, actualElement, diagramConfig);
             },
             duplicateElement -> "There are multiple relations connecting the same classes: "
                     + duplicateElement.getReferencedElement1().getId() + ", "

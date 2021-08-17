@@ -21,7 +21,7 @@ public abstract class Element {
             return false;
         }
 
-        return (id.equalsIgnoreCase(((Element)obj).getId()));
+        return id.equalsIgnoreCase(((Element)obj).getId());
     }
 
     public void init(List<Element> elements){ }

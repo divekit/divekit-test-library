@@ -31,8 +31,12 @@ public class RelationElement extends LineElement {
         relationPointer1.setConnectedElement(getElementAtPos(elements, start));
         relationPointer2.setConnectedElement(getElementAtPos(elements, end));
 
-        if (relationPointer1.getConnectedElement() == null || relationPointer2.getConnectedElement() == null) {
-            throw new InputMismatchException("Could not connect relation");
+        if (relationPointer1.getConnectedElement() == null) {
+            throw new InputMismatchException("Could not connect relation at pos " + start);
+        }
+
+        if (relationPointer2.getConnectedElement() == null) {
+            throw new InputMismatchException("Could not connect relation at pos " + end);
         }
     }
 

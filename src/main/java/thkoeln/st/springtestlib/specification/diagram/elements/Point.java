@@ -16,6 +16,11 @@ public class Point {
         this.y += p.getY();
     }
 
+    @Override
+    public String toString() {
+        return "x=" + x + ", y=" + y;
+    }
+
     public float getX() {
         return x;
     }

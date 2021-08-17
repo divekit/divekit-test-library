@@ -48,4 +48,12 @@ public class UmletDiagramParserTests {
         genericDiagramSpecificationTests.testDiagram("uc-diagram-part-solution.uxf", "uc-diagram.uxf",
                 DiagramType.USE_CASE_DIAGRAM, new DiagramConfig(true, true));
     }
+
+    // State Diagram
+    @Test
+    public void testStateDiagram() throws Exception {
+        GenericDiagramSpecificationTests genericDiagramSpecificationTests = new GenericDiagramSpecificationTests();
+        genericDiagramSpecificationTests.testDiagram("state-diagram-solution.uxf", "state-diagram.uxf",
+                DiagramType.STATE_DIAGRAM, new DiagramConfig(true, false));
+    }
 }

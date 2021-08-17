@@ -6,7 +6,7 @@
     <id>UMLClass</id>
     <coordinates>
       <x>220</x>
-      <y>150</y>
+      <y>140</y>
       <w>120</w>
       <h>130</h>
     </coordinates>
@@ -16,22 +16,23 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>530</x>
-      <y>360</y>
+      <x>570</x>
+      <y>100</y>
       <w>310</w>
       <h>160</h>
     </coordinates>
     <panel_attributes>Birne
 --
 age
-color</panel_attributes>
+color
+--</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>410</x>
-      <y>550</y>
+      <y>540</y>
       <w>130</w>
       <h>80</h>
     </coordinates>
@@ -45,25 +46,25 @@ color: String</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>290</x>
-      <y>270</y>
+      <y>260</y>
       <w>150</w>
       <h>300</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-&gt;&gt;</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;..</panel_attributes>
     <additional_attributes>130.0;280.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>330</x>
-      <y>210</y>
-      <w>220</w>
-      <h>200</h>
+      <y>120</y>
+      <w>260</w>
+      <h>110</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 m1=0..n
 m2=0..1
 </panel_attributes>
-    <additional_attributes>10.0;10.0;200.0;180.0</additional_attributes>
+    <additional_attributes>10.0;90.0;240.0;10.0</additional_attributes>
   </element>
 </diagram>

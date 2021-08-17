@@ -5,6 +5,7 @@ import thkoeln.st.springtestlib.specification.diagram.elements.ElementType;
 
 import java.util.List;
 
+// TODO implement more abstract variant and extend this one from it
 public class ElementCollectionAsserter<T extends Element> {
 
     public interface SingleElementAssertable<T> {
