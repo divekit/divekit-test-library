@@ -4,6 +4,7 @@ import thkoeln.st.springtestlib.specification.diagram.elements.Point;
 import thkoeln.st.springtestlib.specification.diagram.elements.implementations.classelement.ClassAttribute;
 import thkoeln.st.springtestlib.specification.diagram.elements.implementations.classelement.ClassElement;
 import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletElement;
+import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletMetaData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 public class UmlClassParser extends UmletParser {
 
     @Override
-    public ClassElement parseElement(UmletElement sourceElement) {
+    public ClassElement parseElement(UmletElement sourceElement, UmletMetaData umletMetaData) {
         ClassElement classElement = new ClassElement(
                 new Point(sourceElement.getUmletCoordinates().getX(),
                 sourceElement.getUmletCoordinates().getY()),

@@ -14,10 +14,10 @@ public enum UmletElementTypes {
 
     private String elementName;
     private ElementType elementType;
-    private ElementParser<UmletElement> elementParser;
+    private ElementParser<UmletElement, UmletMetaData> elementParser;
 
 
-    UmletElementTypes(String elementName, ElementType elementType, ElementParser<UmletElement> elementParser) {
+    UmletElementTypes(String elementName, ElementType elementType, ElementParser<UmletElement, UmletMetaData> elementParser) {
         this.elementName = elementName;
         this.elementType = elementType;
         this.elementParser = elementParser;
@@ -31,7 +31,7 @@ public enum UmletElementTypes {
         return elementType;
     }
 
-    public ElementParser<UmletElement> getElementParser() {
+    public ElementParser<UmletElement, UmletMetaData> getElementParser() {
         return elementParser;
     }
 }

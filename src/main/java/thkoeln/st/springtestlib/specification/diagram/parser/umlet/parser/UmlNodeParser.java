@@ -8,6 +8,7 @@ import thkoeln.st.springtestlib.specification.diagram.elements.implementations.r
 import thkoeln.st.springtestlib.specification.diagram.elements.implementations.relationelement.RelationLineType;
 import thkoeln.st.springtestlib.specification.diagram.elements.implementations.stateelement.StateElement;
 import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletElement;
+import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletMetaData;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class UmlNodeParser extends UmletParser {
     private static final String TYPE_FINAL = "final";
 
     @Override
-    public NodeElement parseElement(UmletElement sourceElement) {
+    public NodeElement parseElement(UmletElement sourceElement, UmletMetaData umletMetaData) {
         NodeElement nodeElement = new NodeElement(
                 new Point(sourceElement.getUmletCoordinates().getX(),
                         sourceElement.getUmletCoordinates().getY()),

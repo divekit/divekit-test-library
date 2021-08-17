@@ -4,10 +4,7 @@ import com.thoughtworks.xstream.XStream;
 import thkoeln.st.springtestlib.specification.diagram.Diagram;
 import thkoeln.st.springtestlib.specification.diagram.implementations.DiagramType;
 import thkoeln.st.springtestlib.specification.diagram.parser.DiagramParser;
-import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletCoordinates;
-import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletDiagram;
-import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletElement;
-import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletElementTypes;
+import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -23,18 +20,19 @@ public class UmletDiagramParser extends DiagramParser {
         UmletDiagram umletDiagram = parseUmletDiagram(path);
         Diagram diagram = createDiagram(diagramType);
 
+        UmletMetaData umletMetaData = new UmletMetaData(umletDiagram.getZoomLevel() / 10f);
         for (UmletElement umletElement : umletDiagram.getUmletElements()) {
-            parseElement(diagram, umletElement);
+            parseElement(diagram, umletElement, umletMetaData);
         }
 
         diagram.initElements();
         return diagram;
     }
 
-    private void parseElement(Diagram diagram, UmletElement umletElement) {
+    private void parseElement(Diagram diagram, UmletElement umletElement, UmletMetaData umletMetaData) {
         for (UmletElementTypes umletElementType : UmletElementTypes.values()) {
             if (umletElementType.getElementName().equalsIgnoreCase(umletElement.getId())) {
-                diagram.addElement(umletElementType.getElementType(), umletElementType.getElementParser().parseElement(umletElement));
+                diagram.addElement(umletElementType.getElementType(), umletElementType.getElementParser().parseElement(umletElement, umletMetaData));
                 break;
             }
         }

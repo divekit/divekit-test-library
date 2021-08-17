@@ -11,9 +11,16 @@ public class Point {
         this.y = y;
     }
 
-    public void add(Point p) {
+    public Point add(Point p) {
         this.x += p.getX();
         this.y += p.getY();
+        return this;
+    }
+
+    public Point scale(float scale) {
+        this.x *= scale;
+        this.y *= scale;
+        return this;
     }
 
     @Override

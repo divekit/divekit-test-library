@@ -5,6 +5,7 @@ import thkoeln.st.springtestlib.specification.diagram.elements.implementations.r
 import thkoeln.st.springtestlib.specification.diagram.elements.implementations.relationelement.RelationElement;
 import thkoeln.st.springtestlib.specification.diagram.elements.implementations.relationelement.RelationLineType;
 import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletElement;
+import thkoeln.st.springtestlib.specification.diagram.parser.umlet.elements.UmletMetaData;
 
 import java.util.List;
 
@@ -12,10 +13,12 @@ import java.util.List;
 public class UmlRelationParser extends UmletParser {
 
     @Override
-    public RelationElement parseElement(UmletElement sourceElement) {
+    public RelationElement parseElement(UmletElement sourceElement, UmletMetaData umletMetaData) {
         String[] split = sourceElement.getAdditionalAttributes().split(";");
-        Point start = new Point(Float.parseFloat(split[0]), Float.parseFloat(split[1]));
-        Point end = new Point(Float.parseFloat(split[split.length-2]), Float.parseFloat(split[split.length-1]));
+        Point start = new Point(Float.parseFloat(split[0]), Float.parseFloat(split[1]))
+                .scale(umletMetaData.getScale());
+        Point end = new Point(Float.parseFloat(split[split.length-2]), Float.parseFloat(split[split.length-1]))
+                .scale(umletMetaData.getScale());
 
         Point origin = new Point(sourceElement.getUmletCoordinates().getX(), sourceElement.getUmletCoordinates().getY());
         start.add(origin);
