@@ -14,28 +14,30 @@ public class UseCaseDiagram extends Diagram {
     private final ElementCollectionAsserter<ActorElement> actorAsserter = new ElementCollectionAsserter<>(ElementType.ACTOR,
             "Too many actors",
             "A certain actor is missing",
+            (expectedElement, actualElement, diagramConfig) -> expectedElement.equals(actualElement),
             (expectedElement, actualElement, diagramConfig) -> { },
-            duplicateElement -> "There are multiple actors with name: " + duplicateElement.getId(),
+            (duplicateElement, diagramConfig) -> "There are multiple actors with name: " + duplicateElement.getId(),
             diagramExceptionHelper);
 
     private final ElementCollectionAsserter<UseCaseElement> useCaseAsserter = new ElementCollectionAsserter<>(ElementType.USE_CASE,
             "Too many use cases",
             "A certain use case is missing",
+            (expectedElement, actualElement, diagramConfig) -> expectedElement.equals(actualElement),
             (expectedElement, actualElement, diagramConfig) -> { },
-            duplicateElement -> "There are multiple use cases with name: " + duplicateElement.getId(),
+            (duplicateElement, diagramConfig) -> "There are multiple use cases with name: " + duplicateElement.getId(),
             diagramExceptionHelper);
 
     private final ElementCollectionAsserter<RelationElement> relationAsserter = new ElementCollectionAsserter<>(ElementType.RELATION,
             "Too many relations",
             "A certain relation is missing",
+            (expectedElement, actualElement, diagramConfig) -> RelationElementAsserter.compareRelationByReferencedElements(expectedElement, actualElement),
             (expectedElement, actualElement, diagramConfig) -> {
-                RelationElementAsserter relationElementAsserter = new RelationElementAsserter(diagramExceptionHelper);
-                relationElementAsserter.assertRelationLine(expectedElement, actualElement, diagramConfig);
-                relationElementAsserter.assertRelationArrows(expectedElement, actualElement, diagramConfig);
-                relationElementAsserter.assertRelationCardinality(expectedElement, actualElement, diagramConfig); // TODO replace with preemptive tests for existing cardinalities
-                relationElementAsserter.assertRelationDescription(expectedElement, actualElement, diagramConfig);
+                RelationElementAsserter.assertRelationLine(expectedElement, actualElement, diagramConfig, diagramExceptionHelper);
+                RelationElementAsserter.assertRelationArrows(expectedElement, actualElement, diagramConfig, diagramExceptionHelper);
+                RelationElementAsserter.assertRelationCardinality(expectedElement, actualElement, diagramConfig, diagramExceptionHelper); // TODO replace with preemptive tests for existing cardinalities
+                RelationElementAsserter.assertRelationDescription(expectedElement, actualElement, diagramConfig, diagramExceptionHelper);
             },
-            duplicateElement -> "There are multiple relations connecting the same use cases or actors: "
+            (duplicateElement, diagramConfig) -> "There are multiple relations connecting the same use cases or actors: "
                     + duplicateElement.getReferencedElement1().getId() + ", "
                     + duplicateElement.getReferencedElement2().getId(),
             diagramExceptionHelper);

@@ -85,20 +85,6 @@ public class RelationElement extends LineElement {
         }
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof RelationElement)) {
-            return false;
-        }
-
-        RelationElement that = (RelationElement) o;
-
-        return  (getReferencedElement1().equals(that.getReferencedElement1())
-                && getReferencedElement2().equals(that.getReferencedElement2()))
-                || (getReferencedElement1().equals(that.getReferencedElement2())
-                && getReferencedElement2().equals(that.getReferencedElement1()));
-    }
-
     public RelationPointer getRelationPointer1() {
         return relationPointer1;
     }

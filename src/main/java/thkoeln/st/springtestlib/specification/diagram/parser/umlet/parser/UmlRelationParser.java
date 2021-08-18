@@ -103,7 +103,7 @@ public class UmlRelationParser extends UmletParser {
     }
 
     private void setRelationDescription(RelationElement relationElement, String content) {
-        if (!content.contains("lt=")
+        if (!content.contains("lt=") // TODO parse all description lines not only the last one
             && !content.contains("m1=")
             && !content.contains("m2=")) {
             relationElement.setDescription(content);
