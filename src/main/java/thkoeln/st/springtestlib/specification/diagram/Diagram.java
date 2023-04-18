@@ -29,7 +29,9 @@ public abstract class Diagram {
     }
 
     public <T extends Element> List<T> getElementsByType(ElementType elementType) {
-        return (List<T>)elementMap.get(elementType);
+        List<T> returnList = (List<T>)elementMap.get(elementType);
+        if (returnList == null) returnList = new ArrayList<>();
+        return returnList;
     }
 
     public abstract void assertActualDiagram(Diagram actualDiagram, DiagramConfig diagramConfig);
