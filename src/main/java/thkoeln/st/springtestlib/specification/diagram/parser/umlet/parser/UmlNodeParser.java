@@ -17,6 +17,7 @@ public class UmlNodeParser extends UmletParser {
 
     private static final String TYPE_PREFIX = "type";
     private static final String TYPE_INITIAL = "initial";
+    private static final String TYPE_DECISION = "decision";
     private static final String TYPE_FINAL = "final";
 
     @Override
@@ -39,8 +40,13 @@ public class UmlNodeParser extends UmletParser {
                 nodeElement.setType(NodeElementType.FINAL);
                 break;
             case TYPE_INITIAL:
-            default:
                 nodeElement.setType(NodeElementType.INITIAL);
+                break;
+            case TYPE_DECISION:
+                nodeElement.setType(NodeElementType.DECISION);
+                break;
+            default:
+                nodeElement.setType(NodeElementType.NOT_RECOGNIZED);
         }
     }
 
