@@ -5,6 +5,7 @@ public class TableConfig {
     private String[] validRowValues;
     private String[] validColumnValues;
     private String[] validCellValues;
+    private boolean[] caseSensitiveColumns;
 
     private boolean showRowHints;
     private boolean showColumnHints;
@@ -56,5 +57,20 @@ public class TableConfig {
 
     public void setShowColumnHints(boolean showColumnHints) {
         this.showColumnHints = showColumnHints;
+    }
+
+    public boolean isCaseSensitiveColumn( int column ) {
+        if ( caseSensitiveColumns == null || column < 0 || column >= caseSensitiveColumns.length ) {
+            return false;
+        }
+        return caseSensitiveColumns[column];
+    }
+
+    public boolean[] getCaseSensitiveColumns() {
+        return caseSensitiveColumns;
+    }
+
+    public void setCaseSensitiveColumns( boolean[] caseSensitiveColumns ) {
+        this.caseSensitiveColumns = caseSensitiveColumns;
     }
 }

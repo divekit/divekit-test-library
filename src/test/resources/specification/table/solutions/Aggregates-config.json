@@ -1,0 +1,11 @@
+{
+  "explanationDimensions": [],
+  "validRowValues": [],
+  "validColumnValues": [
+    "Aggregate root",
+    "other entities / domain primitives / other VOs"
+  ],
+  "validCellValues": [],
+  "showRowHints": true,
+  "showColumnHints": false
+}

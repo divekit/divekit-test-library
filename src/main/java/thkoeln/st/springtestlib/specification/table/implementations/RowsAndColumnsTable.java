@@ -58,7 +58,9 @@ public class RowsAndColumnsTable extends Table {
             String[] columns = parseElementsInContentLine(contentLines.get(i));
             addRow(columns[0]);
             for (int j = 1; j < columns.length; j++) {
-                setCell(i-2, j-1, Cell.parseCell(columns[j], getValidCellValues(i-2, j-1)));
+                String[] validCellValues = getValidCellValues(i-2, j-1);
+                Cell newCell = Cell.parseCell( columns[j], validCellValues, tableConfig.isCaseSensitiveColumn( j ) );
+                setCell(i-2, j-1, newCell );
             }
         }
     }
