@@ -153,7 +153,10 @@ public abstract class Table {
     }
 
     protected String[] parseElementsInContentLine(String contentLine) {
-        String[] elements = contentLine.trim().split("\\|");
+        // This line used to be "contentLine.trim().split("\\|")" - but this did not work for strings
+        // like "| some content ||" (i.e. ending with a pipe symbol)
+        String[] elements = (contentLine + " ").split("\\|");
+
         int columnMarks = (int)contentLine.chars().filter(ch -> ch == '|').count();
 
         String[] filteredElements = new String[columnMarks - 1];
@@ -274,7 +277,9 @@ public abstract class Table {
             addRow(null);
             String[] columns = parseElementsInContentLine(contentLines.get(i));
             for (int j = 0; j < columns.length; j++) {
-                setCell(i-2, j, Cell.parseCell(columns[j], getValidCellValues(i-2, j)));
+                String[] validCellValues = getValidCellValues(i-2, j);
+                Cell newCell = Cell.parseCell( columns[j], validCellValues, tableConfig.isCaseSensitiveColumn( j ) );
+                setCell(i-2, j, newCell );
             }
         }
     }

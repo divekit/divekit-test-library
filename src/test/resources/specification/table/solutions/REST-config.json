@@ -1,0 +1,17 @@
+{
+  "explanationDimensions": [],
+  "validRowValues": [],
+  "validColumnValues": [
+    "Requirement",
+    "URI",
+    "VERB"
+  ],
+  "caseSensitiveColumns": [
+    "false",
+    "true",
+    "false"
+  ],
+  "validCellValues": [],
+  "showRowHints": true,
+  "showColumnHints": false
+}

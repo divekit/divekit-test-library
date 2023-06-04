@@ -8,9 +8,10 @@ public class Cell {
 
     private List<String> contents = new ArrayList<>();
     private String[] validCellValues;
+    private boolean caseSensitive = false;
 
 
-    public Cell(String[] validCellValues) {
+    private Cell(String[] validCellValues) {
         this.validCellValues = validCellValues;
     }
 
@@ -37,11 +38,17 @@ public class Cell {
 
     public boolean containsContent(String content) {
         for (String testContent : contents) {
-            if (testContent.equalsIgnoreCase(content)) {
-                return true;
+            if ( !caseSensitive ) {
+                if (testContent.equalsIgnoreCase(content)) {
+                    return true;
+                }
+            }
+            else {
+                if (testContent.equals(content)) {
+                    return true;
+                }
             }
         }
-
         return false;
     }
 
@@ -65,8 +72,9 @@ public class Cell {
         return true;
     }
 
-    public static Cell parseCell(String content, String[] validCellValues) {
-        Cell newCell = new Cell(validCellValues);
+    public static Cell parseCell(String content, String[] validCellValues, boolean caseSensitive) {
+        Cell newCell = new Cell( validCellValues );
+        newCell.setCaseSensitive( caseSensitive );
 
         String[] split = content.split(",");
         for (String s : split) {
@@ -80,7 +88,20 @@ public class Cell {
         return newCell;
     }
 
+    public static Cell parseCell(String content, String[] validCellValues) {
+        return parseCell(content, validCellValues, false);
+    }
+
+
     public boolean isEmpty() {
         return contents.isEmpty();
+    }
+
+    public boolean isCaseSensitive() {
+        return caseSensitive;
+    }
+
+    public void setCaseSensitive( boolean caseSensitive ) {
+        this.caseSensitive = caseSensitive;
     }
 }
