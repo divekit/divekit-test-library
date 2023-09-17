@@ -23,12 +23,14 @@ public class RowsAndColumnsTable extends Table {
             int otherTableRowIndex = otherTable.getRowIndex(rows.get(r));
             if (otherTableRowIndex == -1) {
                 tablesMismatch(TableMismatchCause.ROW_NOT_FOUND);
+                continue;
             }
 
             for (int c = 0; c < getColumnCount(); c++) {
                 int otherTableColumnIndex = otherTable.getColumnIndex(columns.get(c));
                 if (otherTableColumnIndex == -1) {
                     tablesMismatch(TableMismatchCause.COLUMN_NOT_FOUND);
+                    continue;
                 }
 
                 if (isDimensionExplanation(rows.get(r)) || isDimensionExplanation(columns.get(c))) {

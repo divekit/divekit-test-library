@@ -16,6 +16,8 @@ public abstract class Table {
 
     protected TableConfig tableConfig;
 
+    protected List<DivekitTableException> detectedTableExceptions = new ArrayList<>();
+
 
     public Table(TableType tableType, TableConfig tableConfig) {
         this.tableType = tableType;
@@ -223,20 +225,28 @@ public abstract class Table {
     public abstract void compareToActualTable(Table actualTable) throws DivekitTableException;
 
     protected void tablesMismatch(String row, String column, TableMismatchCause tableMismatchCause) throws DivekitTableException {
+        DivekitTableException detectedTableException = null;
         switch (tableMismatchCause) {
             case ROW_NOT_FOUND:
-                throw new DivekitTableException("Expected row identifier not found.");
+                detectedTableException = new DivekitTableException("Expected row identifier not found.");
+                break;
             case COLUMN_NOT_FOUND:
-                throw new DivekitTableException("Expected column identifier not found.");
+                detectedTableException = new DivekitTableException("Expected column identifier not found.");
+                break;
             case NOT_ENOUGH_ROWS:
-                throw new DivekitTableException("Not enough rows.");
+                detectedTableException = new DivekitTableException("Not enough rows.");
+                break;
             case TOO_MANY_ROWS:
-                throw new DivekitTableException("Too many rows.");
+                detectedTableException = new DivekitTableException("Too many rows.");
+                break;
             case MISSING_EXPLANATION:
-                throw new DivekitTableException("Explanation is missing. " + getRowAndColumnDescriptor(row, column));
+                detectedTableException = new DivekitTableException("Explanation is missing. " + getRowAndColumnDescriptor(row, column));
+                break;
             case CELL_MISMATCH:
-                throw new DivekitTableException("Cell content is not matching. " + getRowAndColumnDescriptor(row, column));
+                detectedTableException = new DivekitTableException("Cell content is not matching. " + getRowAndColumnDescriptor(row, column));
+                break;
         }
+        detectedTableExceptions.add(detectedTableException);
     }
 
     protected void tablesMismatch(TableMismatchCause tableMismatchCause) throws DivekitTableException {
