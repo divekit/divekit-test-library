@@ -2,6 +2,7 @@ package thkoeln.st.springtestlib.specification.table;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import thkoeln.st.springtestlib.specification.table.exceptions.DivekitTableException;
 import thkoeln.st.springtestlib.specification.table.implementations.UnorderedOnlyColumnsTable;
 import thkoeln.st.springtestlib.specification.table.implementations.OrderedOnlyColumnsTable;
 import thkoeln.st.springtestlib.specification.table.implementations.RowsAndColumnsTable;

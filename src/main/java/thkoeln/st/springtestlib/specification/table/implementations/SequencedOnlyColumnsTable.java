@@ -4,6 +4,7 @@ import thkoeln.st.springtestlib.specification.table.Table;
 import thkoeln.st.springtestlib.specification.table.TableConfig;
 import thkoeln.st.springtestlib.specification.table.TableMismatchCause;
 import thkoeln.st.springtestlib.specification.table.TableType;
+import thkoeln.st.springtestlib.specification.table.exceptions.DivekitTableException;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -17,7 +18,7 @@ public class SequencedOnlyColumnsTable extends Table {
     }
 
     @Override
-    public void compareToActualTable(Table actualTable) {
+    public void compareToActualTable(Table actualTable) throws DivekitTableException {
         if (!(actualTable instanceof SequencedOnlyColumnsTable)) {
             throw new IllegalArgumentException("Wrong table type passed as parameter");
         }
@@ -40,7 +41,7 @@ public class SequencedOnlyColumnsTable extends Table {
         checkRowCountMatch(otherTable);
     }
 
-    private void findDuplicateEntries() {
+    private void findDuplicateEntries() throws DivekitTableException {
         for (int r = 0; r < getRowCount(); r++) {
             for (int i = 0; i < getRowCount(); i++) {
                 if (r != i && compareSequenceRows(r, i, this)) {
@@ -50,7 +51,7 @@ public class SequencedOnlyColumnsTable extends Table {
         }
     }
 
-    private boolean compareSequenceRows(int row, int otherTableRow, SequencedOnlyColumnsTable otherTable) {
+    private boolean compareSequenceRows(int row, int otherTableRow, SequencedOnlyColumnsTable otherTable) throws DivekitTableException {
         for (int c = 0; c < getColumnCount(); c++) {
             int otherTableColumnIndex = otherTable.getColumnIndex(columns.get(c));
             if (otherTableColumnIndex == -1) {
@@ -71,7 +72,7 @@ public class SequencedOnlyColumnsTable extends Table {
     }
 
     @Override
-    public void parse(List<String> contentLines) {
+    public void parse(List<String> contentLines) throws DivekitTableException {
         super.parse(contentLines);
 
         findDuplicateEntries();

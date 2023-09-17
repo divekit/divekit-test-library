@@ -1,6 +1,7 @@
 package thkoeln.st.springtestlib.specification.table.implementations;
 
 import thkoeln.st.springtestlib.specification.table.*;
+import thkoeln.st.springtestlib.specification.table.exceptions.DivekitTableException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ public class UnorderedOnlyColumnsTable extends Table {
     }
 
     @Override
-    public void compareToActualTable(Table actualTable) {
+    public void compareToActualTable(Table actualTable) throws DivekitTableException {
         if (!(actualTable instanceof UnorderedOnlyColumnsTable)) {
             throw new IllegalArgumentException("Wrong table type passed as parameter");
         }

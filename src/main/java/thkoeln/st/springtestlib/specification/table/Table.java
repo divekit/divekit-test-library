@@ -1,5 +1,7 @@
 package thkoeln.st.springtestlib.specification.table;
 
+import thkoeln.st.springtestlib.specification.table.exceptions.DivekitTableException;
+
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -218,30 +220,30 @@ public abstract class Table {
         return isDimensionExplanation(rows.get(row)) || isDimensionExplanation(columns.get(column)) ? new String[]{} : tableConfig.getValidCellValues();
     }
 
-    public abstract void compareToActualTable(Table actualTable);
+    public abstract void compareToActualTable(Table actualTable) throws DivekitTableException;
 
-    protected void tablesMismatch(String row, String column, TableMismatchCause tableMismatchCause) {
+    protected void tablesMismatch(String row, String column, TableMismatchCause tableMismatchCause) throws DivekitTableException {
         switch (tableMismatchCause) {
             case ROW_NOT_FOUND:
-                throw new InputMismatchException("Expected row identifier not found.");
+                throw new DivekitTableException("Expected row identifier not found.");
             case COLUMN_NOT_FOUND:
-                throw new InputMismatchException("Expected column identifier not found.");
+                throw new DivekitTableException("Expected column identifier not found.");
             case NOT_ENOUGH_ROWS:
-                throw new InputMismatchException("Not enough rows.");
+                throw new DivekitTableException("Not enough rows.");
             case TOO_MANY_ROWS:
-                throw new InputMismatchException("Too many rows.");
+                throw new DivekitTableException("Too many rows.");
             case MISSING_EXPLANATION:
-                throw new InputMismatchException("Explanation is missing. " + getRowAndColumnDescriptor(row, column));
+                throw new DivekitTableException("Explanation is missing. " + getRowAndColumnDescriptor(row, column));
             case CELL_MISMATCH:
-                throw new InputMismatchException("Cell content is not matching. " + getRowAndColumnDescriptor(row, column));
+                throw new DivekitTableException("Cell content is not matching. " + getRowAndColumnDescriptor(row, column));
         }
     }
 
-    protected void tablesMismatch(TableMismatchCause tableMismatchCause) {
+    protected void tablesMismatch(TableMismatchCause tableMismatchCause) throws DivekitTableException {
         tablesMismatch(null, null, tableMismatchCause);
     }
 
-    protected void checkRowCountMatch(Table actualTable) {
+    protected void checkRowCountMatch(Table actualTable) throws DivekitTableException {
         if (actualTable.getRowCount() < getRowCount()) {
             tablesMismatch(TableMismatchCause.NOT_ENOUGH_ROWS);
         } else if (actualTable.getRowCount() > getRowCount()) {
@@ -265,7 +267,7 @@ public abstract class Table {
         return message;
     }
 
-    public void parse(List<String> contentLines) {
+    public void parse(List<String> contentLines) throws DivekitTableException {
         contentLines = testSyntax(filterContentLines(contentLines));
 
         String[] columnNames = parseElementsInContentLine(contentLines.get(0));

@@ -4,6 +4,7 @@ import thkoeln.st.springtestlib.specification.table.Table;
 import thkoeln.st.springtestlib.specification.table.TableConfig;
 import thkoeln.st.springtestlib.specification.table.TableMismatchCause;
 import thkoeln.st.springtestlib.specification.table.TableType;
+import thkoeln.st.springtestlib.specification.table.exceptions.DivekitTableException;
 
 
 public class OrderedOnlyColumnsTable extends Table {
@@ -14,7 +15,7 @@ public class OrderedOnlyColumnsTable extends Table {
     }
 
     @Override
-    public void compareToActualTable(Table actualTable) {
+    public void compareToActualTable(Table actualTable) throws DivekitTableException {
         if (!(actualTable instanceof OrderedOnlyColumnsTable)) {
             throw new IllegalArgumentException("Wrong table type passed as parameter");
         }
