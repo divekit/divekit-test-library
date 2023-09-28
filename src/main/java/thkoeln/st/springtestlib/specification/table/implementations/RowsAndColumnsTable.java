@@ -1,7 +1,6 @@
 package thkoeln.st.springtestlib.specification.table.implementations;
 
 import thkoeln.st.springtestlib.specification.table.*;
-import thkoeln.st.springtestlib.specification.table.exceptions.DivekitTableException;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ public class RowsAndColumnsTable extends Table {
 
 
     @Override
-    public void compareToActualTable(Table actualTable) throws DivekitTableException {
+    public void compareToActualTable(Table actualTable) {
         if (!(actualTable instanceof RowsAndColumnsTable)) {
             throw new IllegalArgumentException("Wrong table type passed as parameter");
         }
@@ -35,11 +34,11 @@ public class RowsAndColumnsTable extends Table {
 
                 if (isDimensionExplanation(rows.get(r)) || isDimensionExplanation(columns.get(c))) {
                     if (getCell(r, c).isEmpty() || otherTable.getCell(otherTableRowIndex, otherTableColumnIndex).isEmpty()) {
-                        tablesMismatch(rows.get(r), columns.get(c), TableMismatchCause.MISSING_EXPLANATION);
+                        tablesMismatch(r, c, TableMismatchCause.MISSING_EXPLANATION);
                     }
                 } else {
                     if (getCell(r, c) != null && !getCell(r, c).equals(otherTable.getCell(otherTableRowIndex, otherTableColumnIndex))) {
-                        tablesMismatch(rows.get(r), columns.get(c), TableMismatchCause.CELL_MISMATCH);
+                        tablesMismatch(r, c, TableMismatchCause.CELL_MISMATCH);
                     }
                 }
             }

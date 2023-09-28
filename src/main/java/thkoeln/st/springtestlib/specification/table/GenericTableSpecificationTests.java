@@ -51,7 +51,7 @@ public class GenericTableSpecificationTests {
         return objectMapper.readValue(new InputStreamReader(inputStream), TableConfig.class);
     }
 
-    public void testTableSpecification(String expectedPath, String actualPath, String tableConfigPath, TableType tableType) throws Exception {
+    public List<DivekitTableException> testTableSpecification(String expectedPath, String actualPath, String tableConfigPath, TableType tableType) throws Exception {
         TableConfig tableConfig = loadTableConfig(tableConfigPath);
 
         Table expectedTable = loadTable(expectedPath, tableType, tableConfig);
@@ -59,6 +59,7 @@ public class GenericTableSpecificationTests {
 
         expectedTable.compareToActualTable(actualTable);
         expectedTable.detectedTableExceptions.forEach(System.out::println);
+        return expectedTable.detectedTableExceptions;
     }
 
     public void testTableSyntax(String actualPath, String tableConfigPath, TableType tableType) throws Exception {

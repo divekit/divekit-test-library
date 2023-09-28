@@ -4,7 +4,6 @@ import thkoeln.st.springtestlib.specification.table.Table;
 import thkoeln.st.springtestlib.specification.table.TableConfig;
 import thkoeln.st.springtestlib.specification.table.TableMismatchCause;
 import thkoeln.st.springtestlib.specification.table.TableType;
-import thkoeln.st.springtestlib.specification.table.exceptions.DivekitTableException;
 
 import java.util.InputMismatchException;
 import java.util.List;
@@ -18,7 +17,7 @@ public class SequencedOnlyColumnsTable extends Table {
     }
 
     @Override
-    public void compareToActualTable(Table actualTable) throws DivekitTableException {
+    public void compareToActualTable(Table actualTable) {
         if (!(actualTable instanceof SequencedOnlyColumnsTable)) {
             throw new IllegalArgumentException("Wrong table type passed as parameter");
         }
@@ -34,14 +33,14 @@ public class SequencedOnlyColumnsTable extends Table {
                 }
             }
             if (!foundMatchingRow) {
-                tablesMismatch(Integer.toString(otherTableR+1), null, TableMismatchCause.CELL_MISMATCH);
+                tablesMismatch(otherTableR, null, TableMismatchCause.CELL_MISMATCH);
             }
         }
 
         checkRowCountMatch(otherTable);
     }
 
-    private void findDuplicateEntries() throws DivekitTableException {
+    private void findDuplicateEntries() {
         for (int r = 0; r < getRowCount(); r++) {
             for (int i = 0; i < getRowCount(); i++) {
                 if (r != i && compareSequenceRows(r, i, this)) {
@@ -51,7 +50,7 @@ public class SequencedOnlyColumnsTable extends Table {
         }
     }
 
-    private boolean compareSequenceRows(int row, int otherTableRow, SequencedOnlyColumnsTable otherTable) throws DivekitTableException {
+    private boolean compareSequenceRows(int row, int otherTableRow, SequencedOnlyColumnsTable otherTable) {
         for (int c = 0; c < getColumnCount(); c++) {
             int otherTableColumnIndex = otherTable.getColumnIndex(columns.get(c));
             if (otherTableColumnIndex == -1) {
@@ -60,7 +59,7 @@ public class SequencedOnlyColumnsTable extends Table {
 
             if (isDimensionExplanation(columns.get(c))) {
                 if (getCell(row, c).isEmpty() || otherTable.getCell(otherTableRow, otherTableColumnIndex).isEmpty()) {
-                    tablesMismatch(null, columns.get(c), TableMismatchCause.MISSING_EXPLANATION);
+                    tablesMismatch(null, c, TableMismatchCause.MISSING_EXPLANATION);
                 }
             } else {
                 if (!getCell(row, c).equals(otherTable.getCell(otherTableRow, otherTableColumnIndex))) {
@@ -72,7 +71,7 @@ public class SequencedOnlyColumnsTable extends Table {
     }
 
     @Override
-    public void parse(List<String> contentLines) throws DivekitTableException {
+    public void parse(List<String> contentLines) {
         super.parse(contentLines);
 
         findDuplicateEntries();
