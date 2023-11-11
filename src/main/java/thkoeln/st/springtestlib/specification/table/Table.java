@@ -19,7 +19,6 @@ public abstract class Table {
 
     protected List<DivekitTableException> detectedTableExceptions = new ArrayList<>();
 
-
     public Table(TableType tableType, TableConfig tableConfig) {
         this.tableType = tableType;
 

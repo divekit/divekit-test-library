@@ -5,7 +5,6 @@ import thkoeln.st.springtestlib.specification.table.exceptions.DivekitMissingMis
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /*
  * Column oriented table.
@@ -98,6 +97,4 @@ public class UnorderedOnlyColumnsTable extends Table {
 
         return allCells;
     }
-
-
 }
