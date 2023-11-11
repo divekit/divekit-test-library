@@ -1,11 +1,17 @@
 package thkoeln.st.springtestlib.specification.table.implementations;
 
 import thkoeln.st.springtestlib.specification.table.*;
+import thkoeln.st.springtestlib.specification.table.exceptions.DivekitMissingMismatchException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+/*
+ * Column oriented table.
+ * Column matching is done by column name.
+ * Order of cells in columns must not match.
+ */
 public class UnorderedOnlyColumnsTable extends Table {
 
 
@@ -35,18 +41,42 @@ public class UnorderedOnlyColumnsTable extends Table {
                 }
             } else {
                 if (nonEmptyCells.size() < otherTableNonEmptyCells.size()) {
-                    tablesMismatch(null, c, TableMismatchCause.TOO_MANY_ROWS);
+                    tablesMismatch(null, otherTableColumnIndex, TableMismatchCause.TOO_MANY_MISMATCH);
                 }
                 if (nonEmptyCells.size() > otherTableNonEmptyCells.size()) {
-                    tablesMismatch(null, c, TableMismatchCause.NOT_ENOUGH_ROWS);
+                    tablesMismatch(null, otherTableColumnIndex, TableMismatchCause.MISSING_MISMATCH);
                 }
 
-                for (Cell nonEmptyCell : nonEmptyCells) {
-                    if (!otherTableNonEmptyCells.contains(nonEmptyCell)) {
-                        if (IntStream.range(0, otherTable.getColumnCount()).anyMatch(r -> otherTable.getAllNonEmptyCellsInColumn(r).contains(nonEmptyCell))) {
-                            tablesMismatch(null, c, TableMismatchCause.WRONG_COLUMN_MISMATCH);
+                for (int r = 0; r < getRowCount(); r++) {
+                    if (getCell(r, c) != null && !getCell(r, c).isEmpty() && !otherTableNonEmptyCells.contains(getCell(r, c))) {
+                        int finalR = r;
+                        int finalC = c;
+                        if (otherTableNonEmptyCells.stream().anyMatch(cell -> cell.equalsIgnoreCase(getCell(finalR, finalC)))) {
+                            tablesMismatch(r, otherTableColumnIndex, TableMismatchCause.CAPITALIZATION_MISMATCH);
+                        } else {
+                            var expectedColumns = getExpectedColumns(otherTable.getCell(r, otherTableColumnIndex));
+                            if (!expectedColumns.isEmpty()) {
+                                tablesMismatch(r, otherTableColumnIndex, expectedColumns, TableMismatchCause.WRONG_COLUMN_MISMATCH);
+                            } else if (detectedTableExceptions.stream().noneMatch(e -> e instanceof DivekitMissingMismatchException)) {
+                                tablesMismatch(r, otherTableColumnIndex, TableMismatchCause.CELL_MISMATCH);
+                            }
                         }
-                        tablesMismatch(null, c, TableMismatchCause.CELL_MISMATCH);
+                    }
+                }
+            }
+        }
+        if (detectedTableExceptions.isEmpty()) {
+            for (int r = 0; r < otherTable.getRowCount(); r++) {
+                for (int c = 0; c < otherTable.getColumnCount(); c++) {
+                    if (!getAllCellsInColumn(c).contains(otherTable.getCell(r, c))) {
+                        tablesMismatch(r, c, TableMismatchCause.TOO_MANY_MISMATCH);
+                    }
+                }
+            }
+            for (int r = 0; r < getRowCount(); r++) {
+                for (int c = 0; c < getColumnCount(); c++) {
+                    if (!otherTable.getAllCellsInColumn(c).contains(getCell(r, c))) {
+                        tablesMismatch(r, c, TableMismatchCause.MISSING_MISMATCH);
                     }
                 }
             }
@@ -68,4 +98,6 @@ public class UnorderedOnlyColumnsTable extends Table {
 
         return allCells;
     }
+
+
 }
