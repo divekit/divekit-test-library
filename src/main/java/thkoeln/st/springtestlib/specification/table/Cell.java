@@ -52,6 +52,15 @@ public class Cell {
         return false;
     }
 
+    public boolean containsContentIgnoreCase(String content) {
+        for (String testContent : contents) {
+            if (testContent.equalsIgnoreCase(content)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Cell)) {
@@ -66,6 +75,25 @@ public class Cell {
 
         for (String testContent : otherCell.contents) {
             if (!containsContent(testContent)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean equalsIgnoreCase(Object obj) {
+        if (!(obj instanceof Cell)) {
+            return false;
+        }
+
+        Cell otherCell = (Cell)obj;
+
+        if (contents.size() != otherCell.contents.size()) {
+            return false;
+        }
+
+        for (String testContent : otherCell.contents) {
+            if (!containsContentIgnoreCase(testContent)) {
                 return false;
             }
         }

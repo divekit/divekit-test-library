@@ -58,7 +58,6 @@ public class GenericTableSpecificationTests {
         Table actualTable = loadTable(actualPath, tableType, tableConfig);
 
         expectedTable.compareToActualTable(actualTable);
-        expectedTable.detectedTableExceptions.forEach(System.out::println);
         return expectedTable.detectedTableExceptions;
     }
 

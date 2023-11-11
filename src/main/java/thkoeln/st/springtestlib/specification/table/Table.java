@@ -1,9 +1,9 @@
 package thkoeln.st.springtestlib.specification.table;
 
-import thkoeln.st.springtestlib.specification.table.exceptions.DivekitCellContentMismatchException;
-import thkoeln.st.springtestlib.specification.table.exceptions.DivekitTableException;
+import thkoeln.st.springtestlib.specification.table.exceptions.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.List;
 
@@ -225,7 +225,7 @@ public abstract class Table {
 
     public abstract void compareToActualTable(Table actualTable);
 
-    protected void tablesMismatch(Integer row, Integer column, TableMismatchCause tableMismatchCause) {
+    protected void tablesMismatch(Integer row, Integer column, List<Integer> expected, TableMismatchCause tableMismatchCause) {
         DivekitTableException detectedTableException = null;
         switch (tableMismatchCause) {
             case ROW_NOT_FOUND:
@@ -244,22 +244,33 @@ public abstract class Table {
                 detectedTableException = new DivekitTableException("Explanation is missing. " + getRowAndColumnDescriptor(row, column));
                 break;
             case CELL_MISMATCH:
-                detectedTableException = new DivekitCellContentMismatchException("Cell content is not matching. " + getRowAndColumnDescriptor(row, column), row, column);
+                detectedTableException = new DivekitCellMismatchException("Cell content is not matching. " + getRowAndColumnDescriptor(row, column), row, column);
+                break;
+            case WRONG_COLUMN_MISMATCH:
+                detectedTableException = new DivekitColumnMismatchException("Cell content is not matching but content was found in other column of same row. " + getRowAndColumnDescriptor(row, column), row, column, expected);
+                break;
+            case WRONG_ROW_MISMATCH:
+                detectedTableException = new DivekitRowMismatchException("Cell content is not matching but content was found in other row of same column. " + getRowAndColumnDescriptor(row, column), row, column, expected);
+                break;
+            case TOO_MANY_MISMATCH:
+                detectedTableException = new DivekitTooManyMismatchException("Too many cells in column. " + getRowAndColumnDescriptor(row, column), row, column);
+                break;
+            case MISSING_MISMATCH:
+                detectedTableException = new DivekitMissingMismatchException("Missing cell in column. " + getRowAndColumnDescriptor(row, column), row, column);
+                break;
+            case CAPITALIZATION_MISMATCH:
+                detectedTableException = new DivekitCapitalizationMismatchException("Capitalization of cell content is not matching. " + getRowAndColumnDescriptor(row, column), row, column);
                 break;
         }
         detectedTableExceptions.add(detectedTableException);
     }
 
-    protected void tablesMismatch(TableMismatchCause tableMismatchCause) {
-        tablesMismatch(null, null, tableMismatchCause);
+    protected void tablesMismatch(Integer row, Integer column, TableMismatchCause tableMismatchCause) {
+        tablesMismatch(row, column, null, tableMismatchCause);
     }
 
-    protected void checkRowCountMatch(Table actualTable) {
-        if (actualTable.getRowCount() < getRowCount()) {
-            tablesMismatch(TableMismatchCause.NOT_ENOUGH_ROWS);
-        } else if (actualTable.getRowCount() > getRowCount()) {
-            tablesMismatch(TableMismatchCause.TOO_MANY_ROWS);
-        }
+    protected void tablesMismatch(TableMismatchCause tableMismatchCause) {
+        tablesMismatch(null, null, tableMismatchCause);
     }
 
     private String getRowAndColumnDescriptor(Integer row, Integer column) {
@@ -295,5 +306,40 @@ public abstract class Table {
                 setCell(i-2, j, newCell );
             }
         }
+    }
+
+    protected boolean existsInOtherRowOfColumn(int c, Cell cell) {
+        for (int r = 0; r < getRowCount(); r++) {
+            if (getCell(r, c) != null && getCell(r, c).equals(cell)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected List<Integer> getExpectedColumns(Cell cell) {
+        List<Integer> expectedColumns = new ArrayList<>();
+        for (int c = 0; c < getColumnCount(); c++) {
+            for (int r = 0; r < getRowCount(); r++) {
+                if (!isDimensionExplanation(columns.get(c)) && getCell(r, c) != null && getCell(r, c).equals(cell)) {
+                    expectedColumns.add(c);
+                }
+            }
+        }
+        return new ArrayList<>(new HashSet<>(expectedColumns));
+    }
+
+    protected List<Cell> getAllCellsInColumn(int column) {
+        if (column < 0 || column >= getColumnCount()) {
+            return new ArrayList<>();
+        }
+
+        List<Cell> allCells = new ArrayList<>();
+        for (int r = 0; r < getRowCount(); r++) {
+            Cell cell = getCell(r, column);
+            allCells.add(cell);
+        }
+
+        return allCells;
     }
 }
