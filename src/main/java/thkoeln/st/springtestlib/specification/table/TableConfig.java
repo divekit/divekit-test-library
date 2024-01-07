@@ -10,6 +10,9 @@ public class TableConfig {
     private boolean showRowHints;
     private boolean showColumnHints;
 
+    private boolean shouldCellBeHashed;
+    private boolean shouldRowBeHashed;
+
 
     public String[] getExplanationDimensions() {
         return explanationDimensions;
@@ -72,5 +75,22 @@ public class TableConfig {
 
     public void setCaseSensitiveColumns( boolean[] caseSensitiveColumns ) {
         this.caseSensitiveColumns = caseSensitiveColumns;
+    }
+
+
+    public boolean shouldCellBeHashed() {
+        return shouldCellBeHashed;
+    }
+
+    public void setShouldCellBeHashed( boolean shouldCellBeHashed ) {
+        this.shouldCellBeHashed = shouldCellBeHashed;
+    }
+
+    public boolean shouldRowBeHashed() {
+        return shouldRowBeHashed;
+    }
+
+    public void setShouldRowBeHashed( boolean shouldRowBeHashed ) {
+        this.shouldRowBeHashed = shouldRowBeHashed;
     }
 }

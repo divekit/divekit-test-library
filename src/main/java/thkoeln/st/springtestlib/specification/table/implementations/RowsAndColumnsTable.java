@@ -6,6 +6,8 @@ import java.util.List;
 
 public class RowsAndColumnsTable extends Table {
 
+    private String rowColumn;
+
     public RowsAndColumnsTable(TableConfig tableConfig) {
         super(TableType.ROWS_AND_COLUMNS, tableConfig);
     }
@@ -46,22 +48,46 @@ public class RowsAndColumnsTable extends Table {
     }
 
     @Override
-    public void parse(List<String> contentLines) {
+    public void parse(List<String> contentLines, boolean isHashed) {
         contentLines = testSyntax(filterContentLines(contentLines));
 
         String[] columnNames = parseElementsInContentLine(contentLines.get(0));
+        rowColumn = columnNames[0].trim();
         for (int i = 1; i < columnNames.length; i++) {
             addColumn(columnNames[i].trim());
         }
 
         for (int i = 2; i < contentLines.size(); i++) {
             String[] columns = parseElementsInContentLine(contentLines.get(i));
-            addRow(columns[0]);
+            addRow(columns[0], isHashed, tableConfig.shouldRowBeHashed());
             for (int j = 1; j < columns.length; j++) {
                 String[] validCellValues = getValidCellValues(i-2, j-1);
-                Cell newCell = Cell.parseCell( columns[j], validCellValues, tableConfig.isCaseSensitiveColumn( j ) );
+                Cell newCell = Cell.parseCell(columns[j], validCellValues, tableConfig.isCaseSensitiveColumn(j), isHashed, tableConfig.shouldCellBeHashed() );
                 setCell(i-2, j-1, newCell );
             }
         }
+    }
+
+    @Override
+    protected int getWidth() {
+        return columns.size() + 1;
+    }
+
+    @Override
+    protected List<String> getHeaderRow() {
+        List<String> headerRow = super.getHeaderRow();
+        headerRow.add(0, rowColumn);
+        return headerRow;
+    }
+
+    @Override
+    protected String getStringAtPosition(int row, int column) {
+        if (row == 0 && column == 0)
+            return rowColumn;
+        if (row == 0)
+            return columns.get(column-1);
+        if (column == 0)
+            return rows.get(row-1);
+        return getCell(row-1, column-1).toString();
     }
 }

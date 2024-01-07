@@ -29,7 +29,21 @@ public class RowAndColumnTests {
                 new TableTestAspect( "wrong-root", InputMismatchException.class,
                         "Too many rows." )
         } );
+        testCases.put( "Aggregates-Hashed", new TableTestAspect[] {
+            new TableTestAspect( "missing-inner", InputMismatchException.class,
+                "Cell content is not matching. Row: \"640935d4060f52abd3c391fe190f493db938b461f213986375e923970eb9059a\"" ),
+            new TableTestAspect( "surplus-inner", InputMismatchException.class,
+                "Cell content is not matching. Row: \"b6e3957877afbac525ff73eb32395fb9f6b1ff6ca664dfa6deb9cd9a69aaac7d\"" ),
+            new TableTestAspect( "wrong-root", InputMismatchException.class,
+                "Too many rows." )
+        } );
         testCases.put( "Rest", new TableTestAspect[] {
+            new TableTestAspect( "wrong-case", InputMismatchException.class,
+                "Cell content is not matching. Row: \"Get a specific space ship by ID\"" ),
+            new TableTestAspect( "wrong-verb", InputMismatchException.class,
+                "Cell content is not matching. Row: \"Create a new space ship\"" )
+        } );
+        testCases.put( "Rest-Hashed", new TableTestAspect[] {
                 new TableTestAspect( "wrong-case", InputMismatchException.class,
                         "Cell content is not matching. Row: \"Get a specific space ship by ID\"" ),
                 new TableTestAspect( "wrong-verb", InputMismatchException.class,
@@ -82,7 +96,33 @@ public class RowAndColumnTests {
                             getSolution( testCaseName ),
                             getStudentTable( testCaseName, "ok" ),
                             getConfig( testCaseName ),
-                            TableType.ROWS_AND_COLUMNS );
+                            TableType.ROWS_AND_COLUMNS,
+                            testCaseName.contains("-Hashed"));
+                });
+            }
+        }
+    }
+
+    @Test
+    public void testSaveTables() {
+        for (Map.Entry<String, TableTestAspect[]> entry : testCases.entrySet()) {
+            for (TableTestAspect aspect : entry.getValue()) {
+                String testCaseName = entry.getKey();
+                System.out.println("Testing " + testCaseName + " with " + aspect.getAspectName());
+                assertDoesNotThrow(() -> {
+                    genericTableSpecificationTests.hashTable(
+                        getStudentTable( testCaseName, "ok" ),
+                        getSolution( testCaseName ),
+                        getConfig( testCaseName ),
+                        TableType.ROWS_AND_COLUMNS );
+                });
+                assertDoesNotThrow( () -> {
+                    genericTableSpecificationTests.testTableSpecification(
+                        getSolution( testCaseName ),
+                        getStudentTable( testCaseName, "ok" ),
+                        getConfig( testCaseName ),
+                        TableType.ROWS_AND_COLUMNS,
+                        testCaseName.contains("-Hashed"));
                 });
             }
         }
@@ -99,7 +139,8 @@ public class RowAndColumnTests {
                             getSolution( testCaseName ),
                             getStudentTable( testCaseName, aspect.getAspectName() ),
                             getConfig( testCaseName ),
-                            TableType.ROWS_AND_COLUMNS ); });
+                            TableType.ROWS_AND_COLUMNS,
+                            testCaseName.contains("-Hashed")); });
                 assertEquals( aspect.getExpectedExceptionMessage(), exception.getMessage() );
             }
         }
