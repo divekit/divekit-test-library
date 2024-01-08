@@ -4,6 +4,11 @@ import thkoeln.st.springtestlib.specification.table.*;
 
 import java.util.List;
 
+/*
+ * Row and column oriented table.
+ * Row matching is done by row name.
+ * Column matching is done by column name.
+ */
 public class RowsAndColumnsTable extends Table {
 
     public RowsAndColumnsTable(TableConfig tableConfig) {
@@ -21,28 +26,55 @@ public class RowsAndColumnsTable extends Table {
         for (int r = 0; r < getRowCount(); r++) {
             int otherTableRowIndex = otherTable.getRowIndex(rows.get(r));
             if (otherTableRowIndex == -1) {
-                tablesMismatch(TableMismatchCause.ROW_NOT_FOUND);
+                tablesMismatch(r, null, TableMismatchCause.MISSING_MISMATCH);
+                continue;
             }
 
             for (int c = 0; c < getColumnCount(); c++) {
                 int otherTableColumnIndex = otherTable.getColumnIndex(columns.get(c));
                 if (otherTableColumnIndex == -1) {
-                    tablesMismatch(TableMismatchCause.COLUMN_NOT_FOUND);
+                    tablesMismatch(-1, c, TableMismatchCause.COLUMN_NOT_FOUND);
+                    continue;
                 }
 
                 if (isDimensionExplanation(rows.get(r)) || isDimensionExplanation(columns.get(c))) {
                     if (getCell(r, c).isEmpty() || otherTable.getCell(otherTableRowIndex, otherTableColumnIndex).isEmpty()) {
-                        tablesMismatch(rows.get(r), columns.get(c), TableMismatchCause.MISSING_EXPLANATION);
+                        tablesMismatch(r, c, TableMismatchCause.MISSING_EXPLANATION);
                     }
                 } else {
                     if (getCell(r, c) != null && !getCell(r, c).equals(otherTable.getCell(otherTableRowIndex, otherTableColumnIndex))) {
-                        tablesMismatch(rows.get(r), columns.get(c), TableMismatchCause.CELL_MISMATCH);
+                        if (getCell(r, c).equalsIgnoreCase(otherTable.getCell(r, otherTableColumnIndex))) {
+                            tablesMismatch(otherTableRowIndex, otherTableColumnIndex, TableMismatchCause.CAPITALIZATION_MISMATCH);
+                        } else if (existsInOtherRowOfColumn(c, otherTable.getCell(otherTableRowIndex, otherTableColumnIndex))) {
+                            tablesMismatch(otherTableRowIndex, otherTableColumnIndex, TableMismatchCause.WRONG_ROW_MISMATCH);
+                        } else {
+                            var expectedColumns = getExpectedColumns(otherTable.getCell(otherTableRowIndex, otherTableColumnIndex));
+                            if (!expectedColumns.isEmpty()) {
+                                tablesMismatch(otherTableRowIndex, otherTableColumnIndex, expectedColumns, TableMismatchCause.WRONG_COLUMN_MISMATCH);
+                            } else {
+                                tablesMismatch(otherTableRowIndex, otherTableColumnIndex, TableMismatchCause.CELL_MISMATCH);
+                            }
+                        }
                     }
                 }
             }
         }
-
-        checkRowCountMatch(otherTable);
+        if (detectedTableExceptions.isEmpty()) {
+            for (int r = 0; r < otherTable.getRowCount(); r++) {
+                for (int c = 0; c < otherTable.getColumnCount(); c++) {
+                    if (!otherTable.getCell(r, c).isEmpty() && !getAllCellsInColumn(c).contains(otherTable.getCell(r, c))) {
+                        tablesMismatch(r, c, TableMismatchCause.TOO_MANY_MISMATCH);
+                    }
+                }
+            }
+            for (int r = 0; r < getRowCount(); r++) {
+                for (int c = 0; c < getColumnCount(); c++) {
+                    if (!otherTable.getAllCellsInColumn(c).contains(getCell(r, c))) {
+                        tablesMismatch(r, c, TableMismatchCause.MISSING_MISMATCH);
+                    }
+                }
+            }
+        }
     }
 
     @Override

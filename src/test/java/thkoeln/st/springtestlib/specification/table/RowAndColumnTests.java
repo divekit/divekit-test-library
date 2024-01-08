@@ -2,6 +2,7 @@ package thkoeln.st.springtestlib.specification.table;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import thkoeln.st.springtestlib.specification.table.exceptions.DivekitTableException;
 
 import java.util.HashMap;
 import java.util.InputMismatchException;
@@ -22,17 +23,17 @@ public class RowAndColumnTests {
         testCases = new HashMap<>();
 
         testCases.put( "Aggregates", new TableTestAspect[] {
-                new TableTestAspect( "missing-inner", InputMismatchException.class,
+                new TableTestAspect( "missing-inner", DivekitTableException.class,
                         "Cell content is not matching. Row: \"SpaceShip\"" ),
-                new TableTestAspect( "surplus-inner", InputMismatchException.class,
+                new TableTestAspect( "surplus-inner", DivekitTableException.class,
                         "Cell content is not matching. Row: \"Planet\"" ),
-                new TableTestAspect( "wrong-root", InputMismatchException.class,
+                new TableTestAspect( "wrong-root", DivekitTableException.class,
                         "Too many rows." )
         } );
         testCases.put( "Rest", new TableTestAspect[] {
-                new TableTestAspect( "wrong-case", InputMismatchException.class,
+                new TableTestAspect( "wrong-case", DivekitTableException.class,
                         "Cell content is not matching. Row: \"Get a specific space ship by ID\"" ),
-                new TableTestAspect( "wrong-verb", InputMismatchException.class,
+                new TableTestAspect( "wrong-verb", DivekitTableException.class,
                         "Cell content is not matching. Row: \"Create a new space ship\"" )
         } );
     }
