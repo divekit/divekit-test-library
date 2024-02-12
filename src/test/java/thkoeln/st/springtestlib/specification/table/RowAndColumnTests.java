@@ -60,8 +60,7 @@ public class RowAndColumnTests {
                 assertDoesNotThrow( () -> {
                     genericTableSpecificationTests.testTableSyntax(
                             getStudentTable( testCaseName, aspect.getAspectName() ),
-                            getConfig( testCaseName ),
-                            TableType.ROWS_AND_COLUMNS );
+                            getConfig( testCaseName ) );
                 });
             }
         }
@@ -72,15 +71,13 @@ public class RowAndColumnTests {
         Throwable exception = assertThrows( InputMismatchException.class, () -> {
             genericTableSpecificationTests.testTableSyntax(
                     getStudentTable( "Aggregates", "invalid-syntax1" ),
-                    getConfig( "Aggregates" ),
-                    TableType.ROWS_AND_COLUMNS ); });
+                    getConfig( "Aggregates" ) ); });
         assertEquals( "Each table line needs the same number of \"|\" chars", exception.getMessage() );
 
         exception = assertThrows( InputMismatchException.class, () -> {
                     genericTableSpecificationTests.testTableSyntax(
                             getStudentTable( "Aggregates", "invalid-syntax2" ),
-                            getConfig( "Aggregates" ),
-                            TableType.ROWS_AND_COLUMNS ); });
+                            getConfig( "Aggregates" ) ); });
                 assertEquals( "Each table line needs the same number of \"|\" chars", exception.getMessage() );
     }
 
@@ -96,7 +93,6 @@ public class RowAndColumnTests {
                             getSolution( testCaseName ),
                             getStudentTable( testCaseName, "ok" ),
                             getConfig( testCaseName ),
-                            TableType.ROWS_AND_COLUMNS,
                             testCaseName.contains("-Hashed"));
                 });
             }
@@ -113,15 +109,13 @@ public class RowAndColumnTests {
                     genericTableSpecificationTests.hashTable(
                         getStudentTable( testCaseName, "ok" ),
                         getSolution( testCaseName ),
-                        getConfig( testCaseName ),
-                        TableType.ROWS_AND_COLUMNS );
+                        getConfig( testCaseName ) );
                 });
                 assertDoesNotThrow( () -> {
                     genericTableSpecificationTests.testTableSpecification(
                         getSolution( testCaseName ),
                         getStudentTable( testCaseName, "ok" ),
                         getConfig( testCaseName ),
-                        TableType.ROWS_AND_COLUMNS,
                         testCaseName.contains("-Hashed"));
                 });
             }
@@ -139,7 +133,6 @@ public class RowAndColumnTests {
                             getSolution( testCaseName ),
                             getStudentTable( testCaseName, aspect.getAspectName() ),
                             getConfig( testCaseName ),
-                            TableType.ROWS_AND_COLUMNS,
                             testCaseName.contains("-Hashed")); });
                 assertEquals( aspect.getExpectedExceptionMessage(), exception.getMessage() );
             }

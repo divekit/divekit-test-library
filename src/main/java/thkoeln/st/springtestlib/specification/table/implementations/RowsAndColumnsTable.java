@@ -9,7 +9,7 @@ public class RowsAndColumnsTable extends Table {
     private String rowColumn;
 
     public RowsAndColumnsTable(TableConfig tableConfig) {
-        super(TableType.ROWS_AND_COLUMNS, tableConfig);
+        super(tableConfig);
     }
 
 

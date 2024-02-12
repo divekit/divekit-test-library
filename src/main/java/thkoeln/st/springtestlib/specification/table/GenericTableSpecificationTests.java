@@ -18,9 +18,9 @@ public class GenericTableSpecificationTests {
     private ObjectMapper objectMapper = new ObjectMapper();
 
 
-    private Table loadTable(String path, TableType tableType, TableConfig tableConfig, boolean isHashed) throws Exception {
+    private Table loadTable(String path, TableConfig tableConfig, boolean isHashed) throws Exception {
         List<String> fileLines = loadFileLines(path);
-        Table table = createTable(tableType, tableConfig);
+        Table table = createTable(tableConfig);
         table.parse(fileLines, isHashed);
         return table;
     }
@@ -49,22 +49,22 @@ public class GenericTableSpecificationTests {
         return objectMapper.readValue(new InputStreamReader(inputStream), TableConfig.class);
     }
 
-    public void testTableSpecification(String expectedPath, String actualPath, String tableConfigPath, TableType tableType, boolean isExpectedTableHashed) throws Exception {
+    public void testTableSpecification(String expectedPath, String actualPath, String tableConfigPath, boolean isExpectedTableHashed) throws Exception {
         TableConfig tableConfig = loadTableConfig(tableConfigPath);
 
-        Table expectedTable = loadTable(expectedPath, tableType, tableConfig, isExpectedTableHashed);
-        Table actualTable = loadTable(actualPath, tableType, tableConfig, false);
+        Table expectedTable = loadTable(expectedPath, tableConfig, isExpectedTableHashed);
+        Table actualTable = loadTable(actualPath, tableConfig, false);
 
         expectedTable.compareToActualTable(actualTable);
     }
 
-    public void testTableSyntax(String actualPath, String tableConfigPath, TableType tableType) throws Exception {
+    public void testTableSyntax(String actualPath, String tableConfigPath) throws Exception {
         TableConfig tableConfig = loadTableConfig(tableConfigPath);
-        loadTable(actualPath, tableType, tableConfig, false);
+        loadTable(actualPath, tableConfig, false);
     }
 
-    private Table createTable(TableType tableType, TableConfig tableConfig) {
-        switch (tableType) {
+    private Table createTable(TableConfig tableConfig) {
+        switch (tableConfig.getTableType()) {
             case ROWS_AND_COLUMNS:
                 return new RowsAndColumnsTable(tableConfig);
             case ORDERED_ONLY_COLUMNS:
@@ -78,9 +78,9 @@ public class GenericTableSpecificationTests {
         }
     }
 
-    public void hashTable(String inputPath, String outputPath, String tableConfigPath, TableType tableType) throws Exception {
+    public void hashTable(String inputPath, String outputPath, String tableConfigPath) throws Exception {
         TableConfig tableConfig = loadTableConfig(tableConfigPath);
-        Table inputTable = loadTable(inputPath, tableType, tableConfig, false);
+        Table inputTable = loadTable(inputPath, tableConfig, false);
         saveTable(outputPath, inputTable);
     }
 

@@ -13,6 +13,8 @@ public class TableConfig {
     private boolean shouldCellBeHashed;
     private boolean shouldRowBeHashed;
 
+    private TableType tableType;
+
 
     public String[] getExplanationDimensions() {
         return explanationDimensions;
@@ -92,5 +94,13 @@ public class TableConfig {
 
     public void setShouldRowBeHashed( boolean shouldRowBeHashed ) {
         this.shouldRowBeHashed = shouldRowBeHashed;
+    }
+
+    public TableType getTableType() {
+        return tableType;
+    }
+
+    public void setTableType(TableType tableType) {
+        this.tableType = tableType;
     }
 }

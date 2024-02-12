@@ -13,7 +13,7 @@ public class SequencedOnlyColumnsTable extends Table {
 
 
     public SequencedOnlyColumnsTable(TableConfig tableConfig) {
-        super(TableType.SEQUENCED_ONLY_COLUMNS, tableConfig);
+        super(tableConfig);
     }
 
     @Override

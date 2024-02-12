@@ -9,5 +9,6 @@
   "showRowHints": true,
   "showColumnHints": false,
   "shouldCellBeHashed": true,
-  "shouldRowBeHashed": true
+  "shouldRowBeHashed": true,
+  "tableType": "ROWS_AND_COLUMNS"
 }

@@ -7,8 +7,6 @@ import java.util.stream.IntStream;
 
 public abstract class Table {
 
-    protected TableType tableType;
-
     protected List<String> rows = new ArrayList<>();
     protected List<String> columns = new ArrayList<>();
     protected List<List<Cell>> cells = new ArrayList<>();
@@ -16,9 +14,7 @@ public abstract class Table {
     protected TableConfig tableConfig;
 
 
-    public Table(TableType tableType, TableConfig tableConfig) {
-        this.tableType = tableType;
-
+    public Table(TableConfig tableConfig) {
         this.tableConfig = tableConfig;
     }
 
