@@ -270,7 +270,7 @@ public abstract class Table {
         return message;
     }
 
-    public void parse(List<String> contentLines, boolean isHashed) {
+    public void parse(List<String> contentLines, boolean isHashed, boolean shouldBeHashed) {
         contentLines = testSyntax(filterContentLines(contentLines));
 
         String[] columnNames = parseElementsInContentLine(contentLines.get(0));
@@ -283,7 +283,7 @@ public abstract class Table {
             String[] columns = parseElementsInContentLine(contentLines.get(i));
             for (int j = 0; j < columns.length; j++) {
                 String[] validCellValues = getValidCellValues(i-2, j);
-                Cell newCell = Cell.parseCell( columns[j], validCellValues, tableConfig.isCaseSensitiveColumn( j ), isHashed, tableConfig.shouldColumnBeHashed( j ) );
+                Cell newCell = Cell.parseCell( columns[j], validCellValues, tableConfig.isCaseSensitiveColumn( j ), isHashed, tableConfig.shouldColumnBeHashed( j ) && shouldBeHashed );
                 setCell(i-2, j, newCell );
             }
         }

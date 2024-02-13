@@ -18,10 +18,10 @@ public class GenericTableSpecificationTests {
     private ObjectMapper objectMapper = new ObjectMapper();
 
 
-    private Table loadTable(String path, TableConfig tableConfig, boolean isHashed) throws Exception {
+    private Table loadTable(String path, TableConfig tableConfig, boolean isHashed, boolean shouldBeHashed) throws Exception {
         List<String> fileLines = loadFileLines(path);
         Table table = createTable(tableConfig);
-        table.parse(fileLines, isHashed);
+        table.parse(fileLines, isHashed, shouldBeHashed);
         return table;
     }
 
@@ -52,15 +52,15 @@ public class GenericTableSpecificationTests {
     public void testTableSpecification(String expectedPath, String actualPath, String tableConfigPath, boolean isExpectedTableHashed) throws Exception {
         TableConfig tableConfig = loadTableConfig(tableConfigPath);
 
-        Table expectedTable = loadTable(expectedPath, tableConfig, isExpectedTableHashed);
-        Table actualTable = loadTable(actualPath, tableConfig, false);
+        Table expectedTable = loadTable(expectedPath, tableConfig, isExpectedTableHashed, false);
+        Table actualTable = loadTable(actualPath, tableConfig, false, isExpectedTableHashed);
 
         expectedTable.compareToActualTable(actualTable);
     }
 
     public void testTableSyntax(String actualPath, String tableConfigPath) throws Exception {
         TableConfig tableConfig = loadTableConfig(tableConfigPath);
-        loadTable(actualPath, tableConfig, false);
+        loadTable(actualPath, tableConfig, false, false);
     }
 
     private Table createTable(TableConfig tableConfig) {
@@ -80,7 +80,7 @@ public class GenericTableSpecificationTests {
 
     public void hashTable(String inputPath, String outputPath, String tableConfigPath) throws Exception {
         TableConfig tableConfig = loadTableConfig(tableConfigPath);
-        Table inputTable = loadTable(inputPath, tableConfig, false);
+        Table inputTable = loadTable(inputPath, tableConfig, false, true);
         saveTable(outputPath, inputTable);
     }
 
