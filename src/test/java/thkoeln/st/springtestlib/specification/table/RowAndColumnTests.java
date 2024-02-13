@@ -108,7 +108,7 @@ public class RowAndColumnTests {
                 assertDoesNotThrow(() -> {
                     genericTableSpecificationTests.hashTable(
                         getStudentTable( testCaseName, "ok" ),
-                        getSolution( testCaseName ),
+                        "src/test/resources/" + getSolution( testCaseName ),
                         getConfig( testCaseName ) );
                 });
                 assertDoesNotThrow( () -> {

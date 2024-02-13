@@ -95,5 +95,10 @@ public class GenericTableSpecificationTests {
         for (String line : fileLines) {
             System.out.println(line);
         }
+        var br = new BufferedWriter(new FileWriter(path));
+        for (String line : fileLines) {
+            br.write(line + System.lineSeparator());
+        }
+        br.close();
     }
 }
