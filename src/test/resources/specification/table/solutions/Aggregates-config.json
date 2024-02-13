@@ -8,7 +8,6 @@
   "validCellValues": [],
   "showRowHints": true,
   "showColumnHints": false,
-  "shouldCellBeHashed": false,
-  "shouldRowBeHashed": false,
+  "shouldColumnsBeHashed": [false, false],
   "tableType": "ROWS_AND_COLUMNS"
 }

@@ -279,11 +279,11 @@ public abstract class Table {
         }
 
         for (int i = 2; i < contentLines.size(); i++) {
-            addRow(null, isHashed, tableConfig.shouldRowBeHashed());
+            addRow(null, isHashed, false);
             String[] columns = parseElementsInContentLine(contentLines.get(i));
             for (int j = 0; j < columns.length; j++) {
                 String[] validCellValues = getValidCellValues(i-2, j);
-                Cell newCell = Cell.parseCell( columns[j], validCellValues, tableConfig.isCaseSensitiveColumn( j ), isHashed, tableConfig.shouldCellBeHashed() );
+                Cell newCell = Cell.parseCell( columns[j], validCellValues, tableConfig.isCaseSensitiveColumn( j ), isHashed, tableConfig.shouldColumnBeHashed( j ) );
                 setCell(i-2, j, newCell );
             }
         }

@@ -14,7 +14,6 @@
   "validCellValues": [],
   "showRowHints": true,
   "showColumnHints": false,
-  "shouldCellBeHashed": true,
-  "shouldRowBeHashed": false,
+  "shouldColumnsBeHashed": [false, true, true],
   "tableType": "ROWS_AND_COLUMNS"
 }

@@ -10,8 +10,7 @@ public class TableConfig {
     private boolean showRowHints;
     private boolean showColumnHints;
 
-    private boolean shouldCellBeHashed;
-    private boolean shouldRowBeHashed;
+    private boolean[] shouldColumnsBeHashed;
 
     private TableType tableType;
 
@@ -79,21 +78,19 @@ public class TableConfig {
         this.caseSensitiveColumns = caseSensitiveColumns;
     }
 
-
-    public boolean shouldCellBeHashed() {
-        return shouldCellBeHashed;
+    public boolean shouldColumnBeHashed( int column ) {
+        if ( shouldColumnsBeHashed == null || column < 0 || column >= shouldColumnsBeHashed.length ) {
+            return false;
+        }
+        return shouldColumnsBeHashed[column];
     }
 
-    public void setShouldCellBeHashed( boolean shouldCellBeHashed ) {
-        this.shouldCellBeHashed = shouldCellBeHashed;
+    public boolean[] shouldColumnsBeHashed() {
+        return shouldColumnsBeHashed;
     }
 
-    public boolean shouldRowBeHashed() {
-        return shouldRowBeHashed;
-    }
-
-    public void setShouldRowBeHashed( boolean shouldRowBeHashed ) {
-        this.shouldRowBeHashed = shouldRowBeHashed;
+    public void setShouldColumnsBeHashed( boolean[] shouldColumnsBeHashed ) {
+        this.shouldColumnsBeHashed = shouldColumnsBeHashed;
     }
 
     public TableType getTableType() {

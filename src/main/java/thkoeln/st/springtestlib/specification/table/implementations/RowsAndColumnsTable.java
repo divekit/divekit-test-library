@@ -59,10 +59,10 @@ public class RowsAndColumnsTable extends Table {
 
         for (int i = 2; i < contentLines.size(); i++) {
             String[] columns = parseElementsInContentLine(contentLines.get(i));
-            addRow(columns[0], isHashed, tableConfig.shouldRowBeHashed());
+            addRow(columns[0], isHashed, tableConfig.shouldColumnBeHashed(0));
             for (int j = 1; j < columns.length; j++) {
                 String[] validCellValues = getValidCellValues(i-2, j-1);
-                Cell newCell = Cell.parseCell(columns[j], validCellValues, tableConfig.isCaseSensitiveColumn(j), isHashed, tableConfig.shouldCellBeHashed() );
+                Cell newCell = Cell.parseCell(columns[j], validCellValues, tableConfig.isCaseSensitiveColumn(j), isHashed, tableConfig.shouldColumnBeHashed(j) );
                 setCell(i-2, j-1, newCell );
             }
         }
