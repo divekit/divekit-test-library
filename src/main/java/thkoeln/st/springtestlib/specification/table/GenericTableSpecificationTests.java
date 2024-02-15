@@ -18,10 +18,10 @@ public class GenericTableSpecificationTests {
     private ObjectMapper objectMapper = new ObjectMapper();
 
 
-    private Table loadTable(String path, TableConfig tableConfig, boolean isHashed, boolean shouldBeHashed) throws Exception {
+    private Table loadTable(String path, TableConfig tableConfig, boolean isTableHashed, boolean shouldTableBeHashed) throws Exception {
         List<String> fileLines = loadFileLines(path);
         Table table = createTable(tableConfig);
-        table.parse(fileLines, isHashed, shouldBeHashed);
+        table.parse(fileLines, isTableHashed, shouldTableBeHashed);
         return table;
     }
 
@@ -31,6 +31,9 @@ public class GenericTableSpecificationTests {
         InputStream inputStream = this.getClass()
                 .getClassLoader()
                 .getResourceAsStream(path);
+        if (inputStream == null) {
+            throw new FileNotFoundException("File not found: " + path);
+        }
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
         String line;
@@ -58,9 +61,29 @@ public class GenericTableSpecificationTests {
         expectedTable.compareToActualTable(actualTable);
     }
 
+    public void testTableSpecification(String tableNamePrefix) throws Exception {
+        var expectedPath = tableNamePrefix + "-solution.md";
+        var expectedHashedPath = tableNamePrefix + "-hashed-solution.md";
+        var actualPath = tableNamePrefix + ".md";
+        var tableConfigPath = tableNamePrefix + "-config.json";
+        try {
+            testTableSpecification(expectedPath, actualPath, tableConfigPath, false);
+        } catch (FileNotFoundException e) {
+            if (e.getMessage().contains(expectedPath)) {
+                testTableSpecification(expectedHashedPath, actualPath, tableConfigPath, true);
+            }
+        }
+    }
+
     public void testTableSyntax(String actualPath, String tableConfigPath) throws Exception {
         TableConfig tableConfig = loadTableConfig(tableConfigPath);
         loadTable(actualPath, tableConfig, false, false);
+    }
+
+    public void testTableSyntax(String tableNamePrefix) throws Exception {
+        var actualPath = tableNamePrefix + ".md";
+        var tableConfigPath = tableNamePrefix + "-config.json";
+        testTableSyntax(actualPath, tableConfigPath);
     }
 
     private Table createTable(TableConfig tableConfig) {

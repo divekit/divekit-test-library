@@ -71,8 +71,8 @@ public class SequencedOnlyColumnsTable extends Table {
     }
 
     @Override
-    public void parse(List<String> contentLines, boolean isHashed, boolean shouldBeHashed) {
-        super.parse(contentLines, isHashed, shouldBeHashed);
+    public void parse(List<String> contentLines, boolean isTableHashed, boolean shouldTableBeHashed) {
+        super.parse(contentLines, isTableHashed, shouldTableBeHashed);
 
         findDuplicateEntries();
     }

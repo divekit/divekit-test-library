@@ -48,7 +48,7 @@ public class RowsAndColumnsTable extends Table {
     }
 
     @Override
-    public void parse(List<String> contentLines, boolean isHashed, boolean shouldBeHashed) {
+    public void parse(List<String> contentLines, boolean isTableHashed, boolean shouldTableBeHashed) {
         contentLines = testSyntax(filterContentLines(contentLines));
 
         String[] columnNames = parseElementsInContentLine(contentLines.get(0));
@@ -59,10 +59,16 @@ public class RowsAndColumnsTable extends Table {
 
         for (int i = 2; i < contentLines.size(); i++) {
             String[] columns = parseElementsInContentLine(contentLines.get(i));
-            addRow(columns[0], isHashed, tableConfig.shouldColumnBeHashed(0) && shouldBeHashed);
+            addRow(columns[0], isTableHashed, tableConfig.isHashedColumn(0) && shouldTableBeHashed);
             for (int j = 1; j < columns.length; j++) {
                 String[] validCellValues = getValidCellValues(i-2, j-1);
-                Cell newCell = Cell.parseCell(columns[j], validCellValues, tableConfig.isCaseSensitiveColumn(j), isHashed, tableConfig.shouldColumnBeHashed(j) && shouldBeHashed);
+                Cell newCell = Cell.parseCell(
+                    columns[j],
+                    validCellValues,
+                    tableConfig.isCaseSensitiveColumn(j),
+                    tableConfig.isHashedColumn(j) && isTableHashed,
+                    tableConfig.isHashedColumn(j) && shouldTableBeHashed
+                );
                 setCell(i-2, j-1, newCell );
             }
         }

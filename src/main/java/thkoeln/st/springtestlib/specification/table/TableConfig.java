@@ -1,19 +1,25 @@
 package thkoeln.st.springtestlib.specification.table;
 
 public class TableConfig {
+    private TableType tableType;
     private String[] explanationDimensions;
     private String[] validRowValues;
     private String[] validColumnValues;
     private String[] validCellValues;
     private boolean[] caseSensitiveColumns;
+    private boolean[] hashedColumns;
 
     private boolean showRowHints;
     private boolean showColumnHints;
 
-    private boolean[] shouldColumnsBeHashed;
 
-    private TableType tableType;
+    public TableType getTableType() {
+        return tableType;
+    }
 
+    public void setTableType(TableType tableType) {
+        this.tableType = tableType;
+    }
 
     public String[] getExplanationDimensions() {
         return explanationDimensions;
@@ -78,26 +84,18 @@ public class TableConfig {
         this.caseSensitiveColumns = caseSensitiveColumns;
     }
 
-    public boolean shouldColumnBeHashed( int column ) {
-        if ( shouldColumnsBeHashed == null || column < 0 || column >= shouldColumnsBeHashed.length ) {
+    public boolean isHashedColumn( int column ) {
+        if ( hashedColumns == null || column < 0 || column >= hashedColumns.length ) {
             return false;
         }
-        return shouldColumnsBeHashed[column];
+        return hashedColumns[column];
     }
 
-    public boolean[] shouldColumnsBeHashed() {
-        return shouldColumnsBeHashed;
+    public boolean[] getHashedColumns() {
+        return hashedColumns;
     }
 
-    public void setShouldColumnsBeHashed( boolean[] shouldColumnsBeHashed ) {
-        this.shouldColumnsBeHashed = shouldColumnsBeHashed;
-    }
-
-    public TableType getTableType() {
-        return tableType;
-    }
-
-    public void setTableType(TableType tableType) {
-        this.tableType = tableType;
+    public void setHashedColumns(boolean[] hashedColumns) {
+        this.hashedColumns = hashedColumns;
     }
 }

@@ -1,4 +1,5 @@
 {
+  "tableType": "ROWS_AND_COLUMNS",
   "explanationDimensions": [],
   "validRowValues": [],
   "validColumnValues": [
@@ -6,8 +7,7 @@
     "other entities / domain primitives / other VOs"
   ],
   "validCellValues": [],
+  "hashedColumns": [false, false],
   "showRowHints": true,
-  "showColumnHints": false,
-  "shouldColumnsBeHashed": [false, false],
-  "tableType": "ROWS_AND_COLUMNS"
+  "showColumnHints": false
 }

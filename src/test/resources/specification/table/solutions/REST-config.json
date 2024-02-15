@@ -1,4 +1,5 @@
 {
+  "tableType": "ROWS_AND_COLUMNS",
   "explanationDimensions": [],
   "validRowValues": [],
   "validColumnValues": [
@@ -12,8 +13,7 @@
     "false"
   ],
   "validCellValues": [],
+  "hashedColumns": [false, false, false],
   "showRowHints": true,
-  "showColumnHints": false,
-  "shouldColumnsBeHashed": [false, false, false],
-  "tableType": "ROWS_AND_COLUMNS"
+  "showColumnHints": false
 }

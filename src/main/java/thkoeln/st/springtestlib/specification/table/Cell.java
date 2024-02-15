@@ -85,11 +85,11 @@ public class Cell {
         return String.join(", ", contents);
     }
 
-    public static Cell parseCell(String content, String[] validCellValues, boolean caseSensitive, boolean isHashed, boolean shouldBeHash) {
+    public static Cell parseCell(String content, String[] validCellValues, boolean caseSensitive, boolean isCellHashed, boolean shouldCellBeHashed) {
         Cell newCell = new Cell( validCellValues );
         newCell.setCaseSensitive( caseSensitive );
 
-        if (isHashed) {
+        if (isCellHashed) {
             newCell.hashedContent = content;
             return newCell;
         }
@@ -103,7 +103,7 @@ public class Cell {
             }
         }
 
-        if (shouldBeHash) {
+        if (shouldCellBeHashed) {
             newCell.contents.sort(String::compareToIgnoreCase);
             String joinedContent = String.join(",", newCell.contents);
             try {
