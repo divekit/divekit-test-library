@@ -9,7 +9,7 @@ public class UnorderedOnlyColumnsTable extends Table {
 
 
     public UnorderedOnlyColumnsTable(TableConfig tableConfig) {
-        super(TableType.UNORDERED_ONLY_COLUMNS, tableConfig);
+        super(tableConfig);
     }
 
     @Override

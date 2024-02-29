@@ -10,7 +10,7 @@ public class OrderedOnlyColumnsTable extends Table {
 
 
     public OrderedOnlyColumnsTable(TableConfig tableConfig) {
-        super(TableType.ORDERED_ONLY_COLUMNS, tableConfig);
+        super(tableConfig);
     }
 
     @Override

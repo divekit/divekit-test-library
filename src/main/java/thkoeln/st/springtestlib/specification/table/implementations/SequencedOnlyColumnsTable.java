@@ -13,7 +13,7 @@ public class SequencedOnlyColumnsTable extends Table {
 
 
     public SequencedOnlyColumnsTable(TableConfig tableConfig) {
-        super(TableType.SEQUENCED_ONLY_COLUMNS, tableConfig);
+        super(tableConfig);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class SequencedOnlyColumnsTable extends Table {
     }
 
     @Override
-    public void parse(List<String> contentLines) {
-        super.parse(contentLines);
+    public void parse(List<String> contentLines, boolean isTableHashed, boolean shouldTableBeHashed) {
+        super.parse(contentLines, isTableHashed, shouldTableBeHashed);
 
         findDuplicateEntries();
     }

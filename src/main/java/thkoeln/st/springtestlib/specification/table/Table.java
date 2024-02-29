@@ -3,10 +3,9 @@ package thkoeln.st.springtestlib.specification.table;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public abstract class Table {
-
-    protected TableType tableType;
 
     protected List<String> rows = new ArrayList<>();
     protected List<String> columns = new ArrayList<>();
@@ -15,13 +14,19 @@ public abstract class Table {
     protected TableConfig tableConfig;
 
 
-    public Table(TableType tableType, TableConfig tableConfig) {
-        this.tableType = tableType;
-
+    public Table(TableConfig tableConfig) {
         this.tableConfig = tableConfig;
     }
 
-    public void addRow(String rowName) {
+    public void addRow(String rowName, boolean isHashed, boolean shouldRowBeHashed) {
+        if (!isHashed && shouldRowBeHashed) {
+            try {
+                rowName = Hashing.hashString(rowName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         if (!isRowValid(rowName)) {
             throw new InputMismatchException("\"" + rowName + "\" is not a valid row name");
         }
@@ -265,7 +270,7 @@ public abstract class Table {
         return message;
     }
 
-    public void parse(List<String> contentLines) {
+    public void parse(List<String> contentLines, boolean isTableHashed, boolean shouldTableBeHashed) {
         contentLines = testSyntax(filterContentLines(contentLines));
 
         String[] columnNames = parseElementsInContentLine(contentLines.get(0));
@@ -274,13 +279,89 @@ public abstract class Table {
         }
 
         for (int i = 2; i < contentLines.size(); i++) {
-            addRow(null);
+            addRow(null, isTableHashed, false);
             String[] columns = parseElementsInContentLine(contentLines.get(i));
             for (int j = 0; j < columns.length; j++) {
                 String[] validCellValues = getValidCellValues(i-2, j);
-                Cell newCell = Cell.parseCell( columns[j], validCellValues, tableConfig.isCaseSensitiveColumn( j ) );
+                Cell newCell = Cell.parseCell(
+                    columns[j],
+                    validCellValues,
+                    tableConfig.isCaseSensitiveColumn(j),
+                    tableConfig.isHashedColumn(j) && isTableHashed,
+                    tableConfig.isHashedColumn(j) && shouldTableBeHashed
+                );
                 setCell(i-2, j, newCell );
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        List<String> headers = getHeaderRow();
+
+        // Max lengths
+        int[] maxLengths = headers.stream()
+            .mapToInt(String::length)
+            .toArray();
+
+        for (int i = 0; i < getHeight(); i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                maxLengths[j] = Math.max(maxLengths[j], getStringAtPosition(i, j).length());
+            }
+        }
+
+        // Header
+        String[] headersPadded = headers.stream()
+            .map(s -> s + " ".repeat(Math.max(0, maxLengths[headers.indexOf(s)] - s.length())))
+            .toArray(String[]::new);
+
+        sb.append("| ");
+        sb.append(String.join(" | ", headersPadded));
+        sb.append(" |");
+        sb.append("\n");
+
+        // Separator
+        String[] separators = IntStream.range(0, getWidth())
+            .mapToObj(i -> "-".repeat(maxLengths[i] + 2))
+            .toArray(String[]::new);
+
+        sb.append("|");
+        sb.append(String.join("|", separators));
+        sb.append("|");
+        sb.append("\n");
+
+        // Rows
+        for (int i = 1; i < getHeight(); i++) {
+            List<String> row = new ArrayList<>();
+            for (int j = 0; j < getWidth(); j++) {
+                row.add(getStringAtPosition(i, j) + " ".repeat(Math.max(0, maxLengths[j] - getStringAtPosition(i, j).length())));
+            }
+
+            sb.append("| ");
+            sb.append(String.join(" | ", row));
+            sb.append(" |");
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
+
+    protected int getWidth() {
+        return columns.size();
+    }
+
+    protected int getHeight() {
+        return rows.size() + 1;
+    }
+
+    protected List<String> getHeaderRow() {
+      return new ArrayList<>(columns);
+    }
+
+    protected String getStringAtPosition(int row, int column) {
+        if (row == 0)
+            return columns.get(column);
+        return getCell(row-1, column).toString();
     }
 }
