@@ -32,7 +32,7 @@ public class GenericTableSpecificationTests {
                 .getClassLoader()
                 .getResourceAsStream(path);
         if (inputStream == null) {
-            throw new FileNotFoundException("File not found: " + path);
+            throw new FileNotFoundException("Table not found: " + path);
         }
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -48,7 +48,9 @@ public class GenericTableSpecificationTests {
         InputStream inputStream = this.getClass()
                 .getClassLoader()
                 .getResourceAsStream(tableConfigPath);
-
+        if (inputStream == null) {
+            throw new FileNotFoundException("Table Config not found: " + tableConfigPath);
+        }
         return objectMapper.readValue(new InputStreamReader(inputStream), TableConfig.class);
     }
 
@@ -61,11 +63,7 @@ public class GenericTableSpecificationTests {
         expectedTable.compareToActualTable(actualTable);
     }
 
-    public void testTableSpecification(String tableNamePrefix) throws Exception {
-        var expectedPath = tableNamePrefix + "-solution.md";
-        var expectedHashedPath = tableNamePrefix + "-hashed-solution.md";
-        var actualPath = tableNamePrefix + ".md";
-        var tableConfigPath = tableNamePrefix + "-config.json";
+    public void testTableSpecification(String expectedPath, String expectedHashedPath, String actualPath, String tableConfigPath) throws Exception {
         try {
             testTableSpecification(expectedPath, actualPath, tableConfigPath, false);
         } catch (FileNotFoundException e) {
@@ -73,6 +71,18 @@ public class GenericTableSpecificationTests {
                 testTableSpecification(expectedHashedPath, actualPath, tableConfigPath, true);
             }
         }
+    }
+
+    public void testTableSpecification(String tableNamePrefix) throws Exception {
+        var expectedPath = tableNamePrefix + "-solution.md";
+        var expectedHashedPath = tableNamePrefix + "-hashed-solution.md";
+        var actualPath = tableNamePrefix + ".md";
+        var tableConfigPath = tableNamePrefix + "-config.json";
+        testTableSpecification(expectedPath, expectedHashedPath, actualPath, tableConfigPath);
+    }
+
+    public void testTableSpecification(String expectedPath, String actualPath, String tableConfigPath) throws Exception {
+        testTableSpecification(expectedPath, actualPath, tableConfigPath, false);
     }
 
     public void testTableSyntax(String actualPath, String tableConfigPath) throws Exception {
