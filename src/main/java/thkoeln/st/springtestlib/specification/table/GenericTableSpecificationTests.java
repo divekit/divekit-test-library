@@ -25,6 +25,13 @@ public class GenericTableSpecificationTests {
         return table;
     }
 
+    private Table loadTable2(String path, TableConfig tableConfig, boolean isTableHashed, boolean shouldTableBeHashed) throws Exception {
+        List<String> fileLines = loadFileLines2(path);
+        Table table = createTable(tableConfig);
+        table.parse(fileLines, isTableHashed, shouldTableBeHashed);
+        return table;
+    }
+
     private List<String> loadFileLines(String path) throws Exception {
         List<String> fileLines = new ArrayList<>();
 
@@ -44,6 +51,21 @@ public class GenericTableSpecificationTests {
         return fileLines;
     }
 
+    private List<String> loadFileLines2(String path) throws Exception {
+        List<String> fileLines = new ArrayList<>();
+        File file = new File(path);
+        if (!file.exists()) {
+            throw new FileNotFoundException("File not found: " + path);
+        }
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                fileLines.add(line);
+            }
+        }
+        return fileLines;
+    }
+
     private TableConfig loadTableConfig(String tableConfigPath) throws IOException {
         InputStream inputStream = this.getClass()
                 .getClassLoader()
@@ -52,6 +74,16 @@ public class GenericTableSpecificationTests {
             throw new FileNotFoundException("Table Config not found: " + tableConfigPath);
         }
         return objectMapper.readValue(new InputStreamReader(inputStream), TableConfig.class);
+    }
+
+    private TableConfig loadTableConfig2(String tableConfigPath) throws IOException {
+        File configFile = new File(tableConfigPath);
+        if (!configFile.exists()) {
+            throw new FileNotFoundException("Table Config not found: " + tableConfigPath);
+        }
+        try (FileInputStream inputStream = new FileInputStream(configFile)) {
+            return objectMapper.readValue(new InputStreamReader(inputStream), TableConfig.class);
+        }
     }
 
     public void testTableSpecification(String expectedPath, String actualPath, String tableConfigPath, boolean isExpectedTableHashed) throws Exception {
@@ -112,8 +144,8 @@ public class GenericTableSpecificationTests {
     }
 
     public void hashTable(String inputPath, String outputPath, String tableConfigPath) throws Exception {
-        TableConfig tableConfig = loadTableConfig(tableConfigPath);
-        Table inputTable = loadTable(inputPath, tableConfig, false, true);
+        TableConfig tableConfig = loadTableConfig2(tableConfigPath);
+        Table inputTable = loadTable2(inputPath, tableConfig, false, true);
         saveTable(outputPath, inputTable);
     }
 

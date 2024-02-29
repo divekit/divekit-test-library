@@ -107,9 +107,9 @@ public class RowAndColumnTests {
                 System.out.println("Testing " + testCaseName + " with " + aspect.getAspectName());
                 assertDoesNotThrow(() -> {
                     genericTableSpecificationTests.hashTable(
-                        getStudentTable( testCaseName, "ok" ),
+                        "src/test/resources/" + getStudentTable( testCaseName, "ok" ),
                         "src/test/resources/" + getSolution( testCaseName ),
-                        getConfig( testCaseName ) );
+                        "src/test/resources/" + getConfig( testCaseName ) );
                 });
                 assertDoesNotThrow( () -> {
                     genericTableSpecificationTests.testTableSpecification(
