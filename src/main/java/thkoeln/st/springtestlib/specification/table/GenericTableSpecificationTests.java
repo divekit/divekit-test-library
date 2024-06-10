@@ -2,6 +2,7 @@ package thkoeln.st.springtestlib.specification.table;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import thkoeln.st.springtestlib.specification.table.exceptions.DivekitTableException;
 import thkoeln.st.springtestlib.specification.table.implementations.UnorderedOnlyColumnsTable;
 import thkoeln.st.springtestlib.specification.table.implementations.OrderedOnlyColumnsTable;
 import thkoeln.st.springtestlib.specification.table.implementations.RowsAndColumnsTable;
@@ -50,13 +51,14 @@ public class GenericTableSpecificationTests {
         return objectMapper.readValue(new InputStreamReader(inputStream), TableConfig.class);
     }
 
-    public void testTableSpecification(String expectedPath, String actualPath, String tableConfigPath, TableType tableType) throws Exception {
+    public List<DivekitTableException> testTableSpecification(String expectedPath, String actualPath, String tableConfigPath, TableType tableType) throws Exception {
         TableConfig tableConfig = loadTableConfig(tableConfigPath);
 
         Table expectedTable = loadTable(expectedPath, tableType, tableConfig);
         Table actualTable = loadTable(actualPath, tableType, tableConfig);
 
         expectedTable.compareToActualTable(actualTable);
+        return expectedTable.detectedTableExceptions;
     }
 
     public void testTableSyntax(String actualPath, String tableConfigPath, TableType tableType) throws Exception {
