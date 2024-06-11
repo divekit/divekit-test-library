@@ -16,3 +16,4 @@
 | Get a specific jump gate                                           | /jumpGates/{jumpGate-id}          | GET    |
 | Shut down a specific jump gate                                     | /jumpGates/{jumpGate-id}          | DELETE |
 | Relocate a specific jump gate to another set of planets            | /jumpGates/{jumpGate-id}          | patch  |
+

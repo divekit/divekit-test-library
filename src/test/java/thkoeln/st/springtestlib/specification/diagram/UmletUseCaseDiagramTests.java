@@ -12,7 +12,7 @@ public class UmletUseCaseDiagramTests {
                 DiagramType.USE_CASE_DIAGRAM, new DiagramConfig(true, false));
     }
 
-//    @Test
+    @Test
     public void testWrongUseCaseDiagram() throws Exception {
         GenericDiagramSpecificationTests genericDiagramSpecificationTests = new GenericDiagramSpecificationTests();
         genericDiagramSpecificationTests.testDiagram( "specification/diagram/uc-diagram-solution.uxf", "specification/diagram/uc-diagram-w.uxf",

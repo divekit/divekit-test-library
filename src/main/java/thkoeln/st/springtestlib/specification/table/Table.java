@@ -1,15 +1,11 @@
 package thkoeln.st.springtestlib.specification.table;
 
-import thkoeln.st.springtestlib.specification.table.exceptions.*;
-
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public abstract class Table {
-
-    protected TableType tableType;
 
     protected List<String> rows = new ArrayList<>();
     protected List<String> columns = new ArrayList<>();
@@ -17,15 +13,20 @@ public abstract class Table {
 
     protected TableConfig tableConfig;
 
-    protected List<DivekitTableException> detectedTableExceptions = new ArrayList<>();
 
-    public Table(TableType tableType, TableConfig tableConfig) {
-        this.tableType = tableType;
-
+    public Table(TableConfig tableConfig) {
         this.tableConfig = tableConfig;
     }
 
-    public void addRow(String rowName) {
+    public void addRow(String rowName, boolean isHashed, boolean shouldRowBeHashed) {
+        if (!isHashed && shouldRowBeHashed) {
+            try {
+                rowName = Hashing.hashString(rowName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         if (!isRowValid(rowName)) {
             throw new InputMismatchException("\"" + rowName + "\" is not a valid row name");
         }
@@ -224,71 +225,52 @@ public abstract class Table {
 
     public abstract void compareToActualTable(Table actualTable);
 
-    protected void tablesMismatch(Integer row, Integer column, List<Integer> expected, TableMismatchCause tableMismatchCause) {
-        DivekitTableException detectedTableException = null;
+    protected void tablesMismatch(String row, String column, TableMismatchCause tableMismatchCause) {
         switch (tableMismatchCause) {
             case ROW_NOT_FOUND:
-                detectedTableException = new DivekitTableException("Expected row identifier not found.");
-                break;
+                throw new InputMismatchException("Expected row identifier not found.");
             case COLUMN_NOT_FOUND:
-                detectedTableException = new DivekitTableException("Expected column identifier not found.");
-                break;
+                throw new InputMismatchException("Expected column identifier not found.");
             case NOT_ENOUGH_ROWS:
-                detectedTableException = new DivekitTableException("Not enough rows.");
-                break;
+                throw new InputMismatchException("Not enough rows.");
             case TOO_MANY_ROWS:
-                detectedTableException = new DivekitTableException("Too many rows.");
-                break;
+                throw new InputMismatchException("Too many rows.");
             case MISSING_EXPLANATION:
-                detectedTableException = new DivekitTableException("Explanation is missing. " + getRowAndColumnDescriptor(row, column));
-                break;
+                throw new InputMismatchException("Explanation is missing. " + getRowAndColumnDescriptor(row, column));
             case CELL_MISMATCH:
-                detectedTableException = new DivekitCellMismatchException("Cell content is not matching. " + getRowAndColumnDescriptor(row, column), row, column);
-                break;
-            case WRONG_COLUMN_MISMATCH:
-                detectedTableException = new DivekitColumnMismatchException("Cell content is not matching but content was found in other column of same row. " + getRowAndColumnDescriptor(row, column), row, column, expected);
-                break;
-            case WRONG_ROW_MISMATCH:
-                detectedTableException = new DivekitRowMismatchException("Cell content is not matching but content was found in other row of same column. " + getRowAndColumnDescriptor(row, column), row, column, expected);
-                break;
-            case TOO_MANY_MISMATCH:
-                detectedTableException = new DivekitTooManyMismatchException("Too many cells in column. " + getRowAndColumnDescriptor(row, column), row, column);
-                break;
-            case MISSING_MISMATCH:
-                detectedTableException = new DivekitMissingMismatchException("Missing cell in column. " + getRowAndColumnDescriptor(row, column), row, column);
-                break;
-            case CAPITALIZATION_MISMATCH:
-                detectedTableException = new DivekitCapitalizationMismatchException("Capitalization of cell content is not matching. " + getRowAndColumnDescriptor(row, column), row, column);
-                break;
+                throw new InputMismatchException("Cell content is not matching. " + getRowAndColumnDescriptor(row, column));
         }
-        detectedTableExceptions.add(detectedTableException);
-    }
-
-    protected void tablesMismatch(Integer row, Integer column, TableMismatchCause tableMismatchCause) {
-        tablesMismatch(row, column, null, tableMismatchCause);
     }
 
     protected void tablesMismatch(TableMismatchCause tableMismatchCause) {
         tablesMismatch(null, null, tableMismatchCause);
     }
 
-    private String getRowAndColumnDescriptor(Integer row, Integer column) {
+    protected void checkRowCountMatch(Table actualTable) {
+        if (actualTable.getRowCount() < getRowCount()) {
+            tablesMismatch(TableMismatchCause.NOT_ENOUGH_ROWS);
+        } else if (actualTable.getRowCount() > getRowCount()) {
+            tablesMismatch(TableMismatchCause.TOO_MANY_ROWS);
+        }
+    }
+
+    private String getRowAndColumnDescriptor(String row, String column) {
         String message = "";
-        if (row != null) {
-            message += "Row: " + row;
-            if (column != null) {
+        if (tableConfig.isShowRowHints() && row != null) {
+            message += "Row: \"" + row + "\"";
+            if (tableConfig.isShowColumnHints() && column != null) {
                 message += ", ";
             }
         }
 
-        if (column != null) {
-            message += "Column: " + column;
+        if (tableConfig.isShowColumnHints() && column != null) {
+            message += "Column: \"" + column + "\"";
         }
 
         return message;
     }
 
-    public void parse(List<String> contentLines) {
+    public void parse(List<String> contentLines, boolean isTableHashed, boolean shouldTableBeHashed) {
         contentLines = testSyntax(filterContentLines(contentLines));
 
         String[] columnNames = parseElementsInContentLine(contentLines.get(0));
@@ -297,48 +279,89 @@ public abstract class Table {
         }
 
         for (int i = 2; i < contentLines.size(); i++) {
-            addRow(null);
+            addRow(null, isTableHashed, false);
             String[] columns = parseElementsInContentLine(contentLines.get(i));
             for (int j = 0; j < columns.length; j++) {
                 String[] validCellValues = getValidCellValues(i-2, j);
-                Cell newCell = Cell.parseCell( columns[j], validCellValues, tableConfig.isCaseSensitiveColumn( j ) );
+                Cell newCell = Cell.parseCell(
+                    columns[j],
+                    validCellValues,
+                    tableConfig.isCaseSensitiveColumn(j),
+                    tableConfig.isHashedColumn(j) && isTableHashed,
+                    tableConfig.isHashedColumn(j) && shouldTableBeHashed
+                );
                 setCell(i-2, j, newCell );
             }
         }
     }
 
-    protected boolean existsInOtherRowOfColumn(int c, Cell cell) {
-        for (int r = 0; r < getRowCount(); r++) {
-            if (getCell(r, c) != null && getCell(r, c).equals(cell)) {
-                return true;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        List<String> headers = getHeaderRow();
+
+        // Max lengths
+        int[] maxLengths = headers.stream()
+            .mapToInt(String::length)
+            .toArray();
+
+        for (int i = 0; i < getHeight(); i++) {
+            for (int j = 0; j < getWidth(); j++) {
+                maxLengths[j] = Math.max(maxLengths[j], getStringAtPosition(i, j).length());
             }
         }
-        return false;
-    }
 
-    protected List<Integer> getExpectedColumns(Cell cell) {
-        List<Integer> expectedColumns = new ArrayList<>();
-        for (int c = 0; c < getColumnCount(); c++) {
-            for (int r = 0; r < getRowCount(); r++) {
-                if (!isDimensionExplanation(columns.get(c)) && getCell(r, c) != null && getCell(r, c).equals(cell)) {
-                    expectedColumns.add(c);
-                }
+        // Header
+        String[] headersPadded = headers.stream()
+            .map(s -> s + " ".repeat(Math.max(0, maxLengths[headers.indexOf(s)] - s.length())))
+            .toArray(String[]::new);
+
+        sb.append("| ");
+        sb.append(String.join(" | ", headersPadded));
+        sb.append(" |");
+        sb.append("\n");
+
+        // Separator
+        String[] separators = IntStream.range(0, getWidth())
+            .mapToObj(i -> "-".repeat(maxLengths[i] + 2))
+            .toArray(String[]::new);
+
+        sb.append("|");
+        sb.append(String.join("|", separators));
+        sb.append("|");
+        sb.append("\n");
+
+        // Rows
+        for (int i = 1; i < getHeight(); i++) {
+            List<String> row = new ArrayList<>();
+            for (int j = 0; j < getWidth(); j++) {
+                row.add(getStringAtPosition(i, j) + " ".repeat(Math.max(0, maxLengths[j] - getStringAtPosition(i, j).length())));
             }
+
+            sb.append("| ");
+            sb.append(String.join(" | ", row));
+            sb.append(" |");
+            sb.append("\n");
         }
-        return new ArrayList<>(new HashSet<>(expectedColumns));
+        return sb.toString();
     }
 
-    protected List<Cell> getAllCellsInColumn(int column) {
-        if (column < 0 || column >= getColumnCount()) {
-            return new ArrayList<>();
-        }
+    protected int getWidth() {
+        return columns.size();
+    }
 
-        List<Cell> allCells = new ArrayList<>();
-        for (int r = 0; r < getRowCount(); r++) {
-            Cell cell = getCell(r, column);
-            allCells.add(cell);
-        }
+    protected int getHeight() {
+        return rows.size() + 1;
+    }
 
-        return allCells;
+    protected List<String> getHeaderRow() {
+      return new ArrayList<>(columns);
+    }
+
+    protected String getStringAtPosition(int row, int column) {
+        if (row == 0)
+            return columns.get(column);
+        return getCell(row-1, column).toString();
     }
 }

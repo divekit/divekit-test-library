@@ -7,6 +7,7 @@ import java.util.List;
 public class Cell {
 
     private List<String> contents = new ArrayList<>();
+    private String hashedContent;
     private String[] validCellValues;
     private boolean caseSensitive = false;
 
@@ -52,15 +53,6 @@ public class Cell {
         return false;
     }
 
-    public boolean containsContentIgnoreCase(String content) {
-        for (String testContent : contents) {
-            if (testContent.equalsIgnoreCase(content)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Cell)) {
@@ -68,6 +60,10 @@ public class Cell {
         }
 
         Cell otherCell = (Cell)obj;
+
+        if (hashedContent != null && otherCell.hashedContent != null) {
+            return hashedContent.equals(otherCell.hashedContent);
+        }
 
         if (contents.size() != otherCell.contents.size()) {
             return false;
@@ -81,28 +77,22 @@ public class Cell {
         return true;
     }
 
-    public boolean equalsIgnoreCase(Object obj) {
-        if (!(obj instanceof Cell)) {
-            return false;
+    @Override
+    public String toString() {
+        if (hashedContent != null) {
+            return hashedContent;
         }
-
-        Cell otherCell = (Cell)obj;
-
-        if (contents.size() != otherCell.contents.size()) {
-            return false;
-        }
-
-        for (String testContent : otherCell.contents) {
-            if (!containsContentIgnoreCase(testContent)) {
-                return false;
-            }
-        }
-        return true;
+        return String.join(", ", contents);
     }
 
-    public static Cell parseCell(String content, String[] validCellValues, boolean caseSensitive) {
+    public static Cell parseCell(String content, String[] validCellValues, boolean caseSensitive, boolean isCellHashed, boolean shouldCellBeHashed) {
         Cell newCell = new Cell( validCellValues );
         newCell.setCaseSensitive( caseSensitive );
+
+        if (isCellHashed) {
+            newCell.hashedContent = content;
+            return newCell;
+        }
 
         String[] split = content.split(",");
         for (String s : split) {
@@ -113,13 +103,22 @@ public class Cell {
             }
         }
 
+        if (shouldCellBeHashed) {
+            newCell.contents.sort(String::compareToIgnoreCase);
+            String joinedContent = String.join(",", newCell.contents);
+            try {
+                if (caseSensitive) {
+                    newCell.hashedContent = Hashing.hashString(joinedContent);
+                } else {
+                    newCell.hashedContent = Hashing.hashString(joinedContent.toLowerCase());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         return newCell;
     }
-
-    public static Cell parseCell(String content, String[] validCellValues) {
-        return parseCell(content, validCellValues, false);
-    }
-
 
     public boolean isEmpty() {
         return contents.isEmpty();
@@ -131,5 +130,9 @@ public class Cell {
 
     public void setCaseSensitive( boolean caseSensitive ) {
         this.caseSensitive = caseSensitive;
+    }
+
+    public String getHashedContent() {
+        return hashedContent;
     }
 }

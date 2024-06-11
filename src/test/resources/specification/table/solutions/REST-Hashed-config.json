@@ -3,11 +3,17 @@
   "explanationDimensions": [],
   "validRowValues": [],
   "validColumnValues": [
-    "Aggregate root",
-    "other entities / domain primitives / other VOs"
+    "Requirement",
+    "URI",
+    "VERB"
+  ],
+  "caseSensitiveColumns": [
+    "false",
+    "true",
+    "false"
   ],
   "validCellValues": [],
-  "hashedColumns": [false, false],
+  "hashedColumns": [false, true, true],
   "showRowHints": true,
   "showColumnHints": false
 }

@@ -4,13 +4,13 @@ import org.junit.Test;
 
 public class EvaluationTest {
 
-//    @Test
+    @Test
     public void testEvaluationForExercise1() throws Exception {
         GenericEvaluationTests genericEvaluationTests = new GenericEvaluationTests();
         genericEvaluationTests.evaluateExercise("Exercise 1");
     }
 
-//    @Test
+    @Test
     public void testEvaluationForExercise2() throws Exception {
         GenericEvaluationTests genericEvaluationTests = new GenericEvaluationTests();
         genericEvaluationTests.evaluateExercise("Exercise 2");

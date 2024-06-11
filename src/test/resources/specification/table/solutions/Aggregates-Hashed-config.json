@@ -7,7 +7,7 @@
     "other entities / domain primitives / other VOs"
   ],
   "validCellValues": [],
-  "hashedColumns": [false, false],
+  "hashedColumns": [true, true],
   "showRowHints": true,
   "showColumnHints": false
 }

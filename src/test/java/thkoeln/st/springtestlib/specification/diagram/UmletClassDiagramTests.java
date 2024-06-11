@@ -8,11 +8,13 @@ public class UmletClassDiagramTests {
     @Test
     public void testClassDiagram() throws Exception {
         GenericDiagramSpecificationTests genericDiagramSpecificationTests = new GenericDiagramSpecificationTests();
-        genericDiagramSpecificationTests.testDiagram( "specification/diagram/class-diagram-solution.uxf", "specification/diagram/class-diagram.uxf",
+        genericDiagramSpecificationTests.testDiagram(
+                "specification/diagram/class-diagram-solution.uxf",
+                "specification/diagram/class-diagram.uxf",
                 DiagramType.CLASS_DIAGRAM, new DiagramConfig(true, false));
     }
 
-//    @Test
+    @Test
     public void testWrongClassDiagram() throws Exception {
         GenericDiagramSpecificationTests genericDiagramSpecificationTests = new GenericDiagramSpecificationTests();
         genericDiagramSpecificationTests.testDiagram( "specification/diagram/class-diagram-solution.uxf", "specification/diagram/class-diagram-w.uxf",
