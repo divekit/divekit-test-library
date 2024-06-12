@@ -1,5 +1,6 @@
 package thkoeln.st.springtestlib.specification.table;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@Slf4j
 public class RowAndColumnTests {
 
     private GenericTableSpecificationTests genericTableSpecificationTests = null;
@@ -87,7 +88,7 @@ public class RowAndColumnTests {
         for ( Map.Entry<String, TableTestAspect[]> entry : testCases.entrySet() ) {
             for ( TableTestAspect aspect : entry.getValue() ) {
                 String testCaseName = entry.getKey();
-                System.out.println( "Testing " + testCaseName + " with " + aspect.getAspectName() );
+                log.info( "Testing " + testCaseName + " with " + aspect.getAspectName() );
                 assertDoesNotThrow( () -> {
                     genericTableSpecificationTests.testTableSpecification(
                             getSolution( testCaseName ),
@@ -104,7 +105,7 @@ public class RowAndColumnTests {
         for (Map.Entry<String, TableTestAspect[]> entry : testCases.entrySet()) {
             for (TableTestAspect aspect : entry.getValue()) {
                 String testCaseName = entry.getKey();
-                System.out.println("Testing " + testCaseName + " with " + aspect.getAspectName());
+                log.info("Testing " + testCaseName + " with " + aspect.getAspectName());
                 assertDoesNotThrow(() -> {
                     genericTableSpecificationTests.hashTable(
                         "src/test/resources/" + getStudentTable( testCaseName, "ok" ),
@@ -127,7 +128,7 @@ public class RowAndColumnTests {
         for ( Map.Entry<String, TableTestAspect[]> entry : testCases.entrySet() ) {
             for ( TableTestAspect aspect : entry.getValue() ) {
                 String testCaseName = entry.getKey();
-                System.out.println( "Testing " + testCaseName + " with " + aspect.getAspectName() );
+                log.info( "Testing " + testCaseName + " with " + aspect.getAspectName() );
                 Throwable exception = assertThrows( aspect.getExpectedException(), () -> {
                     genericTableSpecificationTests.testTableSpecification(
                             getSolution( testCaseName ),

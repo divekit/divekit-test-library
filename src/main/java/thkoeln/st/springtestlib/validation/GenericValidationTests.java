@@ -1,5 +1,6 @@
 package thkoeln.st.springtestlib.validation;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.WebApplicationContext;
 import thkoeln.st.springtestlib.core.Attribute;
 import thkoeln.st.springtestlib.core.GenericTests;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * Check whether object fields contain certain constraints to ensure valid objects
  */
+@Slf4j
 public class GenericValidationTests extends GenericTests {
 
     private Validator validator;
@@ -38,9 +40,9 @@ public class GenericValidationTests extends GenericTests {
 
         Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object);
 
-        System.out.println("These violations were found:");
+        log.info("These violations were found:");
         for (ConstraintViolation<Object> constraintViolation : constraintViolations) {
-            System.out.println(constraintViolation.toString());
+            log.info(constraintViolation.toString());
         }
 
         assertEquals(expectedViolations, constraintViolations.size());

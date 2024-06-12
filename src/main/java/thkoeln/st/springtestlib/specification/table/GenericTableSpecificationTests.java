@@ -2,6 +2,7 @@ package thkoeln.st.springtestlib.specification.table;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import thkoeln.st.springtestlib.specification.table.implementations.UnorderedOnlyColumnsTable;
 import thkoeln.st.springtestlib.specification.table.implementations.OrderedOnlyColumnsTable;
 import thkoeln.st.springtestlib.specification.table.implementations.RowsAndColumnsTable;
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class GenericTableSpecificationTests {
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -155,10 +157,10 @@ public class GenericTableSpecificationTests {
     }
 
     private void saveFileLines(String path, List<String> fileLines) throws Exception {
-        System.out.println("Saving file to " + path);
-        System.out.println("File content:");
+        log.info("Saving file to " + path);
+        log.debug("File content:");
         for (String line : fileLines) {
-            System.out.println(line);
+            log.debug(line);
         }
         var br = new BufferedWriter(new FileWriter(path));
         for (String line : fileLines) {

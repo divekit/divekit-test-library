@@ -1,6 +1,7 @@
 package thkoeln.st.springtestlib.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import thkoeln.st.springtestlib.core.objectdescription.ObjectDescription;
 
 import java.lang.annotation.Annotation;
@@ -12,6 +13,7 @@ import java.util.List;
 /**
  * Instantiates objects based on a given class and given attributes
  */
+@Slf4j
 public class ObjectBuilder {
 
     private ObjectMapper objectMapper = new ObjectMapper();
@@ -104,7 +106,7 @@ public class ObjectBuilder {
         if (!attributeList.isEmpty()) {
             String missing = "";
             for (Attribute unusedAttribute : attributeList) {
-                System.out.println("Unused Attribute: " + unusedAttribute.getName());
+                log.debug("Unused Attribute: " + unusedAttribute.getName());
                 missing += unusedAttribute.getName();
             }
             throw new Exception( "There are Attributes that seem to be missing from '"
